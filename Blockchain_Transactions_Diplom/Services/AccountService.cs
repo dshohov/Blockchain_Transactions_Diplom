@@ -13,9 +13,9 @@ namespace Blockchain_Transactions_Diplom.Services
     {
         private readonly UserManager<AppUser> _userManager;
         private readonly SignInManager<AppUser> _signInManager;
-        private readonly ISendGridEmail _sendGridEmail;
+        private readonly IPostmarkEmail _sendGridEmail;
         private readonly RoleManager<IdentityRole> _roleManager;
-        public AccountService(UserManager<AppUser> userManager, SignInManager<AppUser> signInManager, ISendGridEmail sendGridEmail, RoleManager<IdentityRole> roleManager)
+        public AccountService(UserManager<AppUser> userManager, SignInManager<AppUser> signInManager, IPostmarkEmail sendGridEmail, RoleManager<IdentityRole> roleManager)
         {
             _userManager = userManager;
             _signInManager = signInManager;
@@ -83,8 +83,6 @@ namespace Blockchain_Transactions_Diplom.Services
             {
                 await _roleManager.CreateAsync(new IdentityRole("User"));
             }
-            List<SelectListItem> listItems = new List<SelectListItem>();
-            
                   
             RegisterViewModel registerViewModel = new RegisterViewModel();
             registerViewModel.ReturnUrl = returnUrl;

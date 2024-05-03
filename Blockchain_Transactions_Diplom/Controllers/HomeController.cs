@@ -1,6 +1,9 @@
 ﻿using Blockchain_Transactions_Diplom.Models;
 using Microsoft.AspNetCore.Mvc;
+using PostmarkDotNet.Model;
+using PostmarkDotNet;
 using System.Diagnostics;
+using PostmarkDotNet;
 
 namespace Blockchain_Transactions_Diplom.Controllers
 {
@@ -13,8 +16,27 @@ namespace Blockchain_Transactions_Diplom.Controllers
             _logger = logger;
         }
 
-        public IActionResult Index()
+        public async Task<IActionResult> IndexAsync()
         {
+            //var message = new PostmarkMessage()
+            //{
+            //    To = "d.shokhov@student.csn.khai.edu",
+            //    From = "d.shokhov@student.csn.khai.edu",
+            //    TrackOpens = true,
+            //    Subject = "A complex email",
+            //    TextBody = "Plain Text Body",
+            //    HtmlBody = "HTML goes here",
+            //    Tag = "New Year's Email Campaign",
+            //    Headers = new HeaderCollection{
+                   
+            //      }
+            //};
+
+            //var client = new PostmarkClient("d1a3fcf9-9135-437d-80c6-23b2bb1c1740");
+            //var sendResult = await client.SendMessageAsync(message);
+
+            //if (sendResult.Status == PostmarkStatus.Success) { /* Handle success */ }
+            //else { /* Resolve issue.*/ }
             return View();
         }
 

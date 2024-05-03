@@ -17,19 +17,19 @@ namespace Blockchain_Transactions_Diplom
             var builder = WebApplication.CreateBuilder(args);
 
             // Add services to the container.
-            builder.Services.AddControllersWithViews();
+            builder.Services.AddControllersWithViews(); 
             builder.Services.AddDbContext<ApplicationDBContext>(e =>
-                e.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+                e.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"), b => b.MigrationsAssembly("Blockchain_Transactions_Diplom")));
             builder.Services.AddIdentity<AppUser, IdentityRole>().AddEntityFrameworkStores<ApplicationDBContext>().AddDefaultTokenProviders();
             builder.Services.AddScoped<IAccountService, AccountService>();
-            builder.Services.AddTransient<ISendGridEmail, SendGridEmail>();
+            builder.Services.AddTransient<IPostmarkEmail, PostmarkEmail>();
             builder.Services.AddControllersWithViews();
-            builder.Services.Configure<AuthMessageSenderOptions>(builder.Configuration.GetSection("SendGrid"));
+            builder.Services.Configure<AuthMessageSenderOptions>(builder.Configuration.GetSection("Postmark"));
             builder.Services.Configure<IdentityOptions>(opt =>
             {
                 opt.Password.RequiredLength = 5;
                 opt.Password.RequireLowercase = true;
-                opt.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromSeconds(10);
+                opt.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromSeconds(10);  
                 opt.Lockout.MaxFailedAccessAttempts = 5;
                 //opt.SignIn.RequireConfirmedAccount = true;
             });
