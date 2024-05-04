@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Blockchain_Transactions_Diplom.Models;
 using Blockchain_Transactions_Diplom.ViewModels;
+using System.Security.Claims;
 
 namespace Blockchain_Transactions_Diplom.IServices
 {
@@ -16,5 +17,6 @@ namespace Blockchain_Transactions_Diplom.IServices
         Task PostForgotPasswordAsync(ForgotPasswordViewModel model, string callbackurl);
         Task<AppUser> GetUserByEmailAsync(string email);
         Task<string> CreateCodeAsync(AppUser user);
+        Task<AccountInfoViewModel> GetUserInfoAsync(ClaimsPrincipal user);
     }
 }

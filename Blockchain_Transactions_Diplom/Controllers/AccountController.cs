@@ -2,6 +2,8 @@
 using Microsoft.AspNetCore.Http.Extensions;
 using Microsoft.AspNetCore.Mvc;
 using Blockchain_Transactions_Diplom.IServices;
+using Blockchain_Transactions_Diplom.Models;
+using Microsoft.AspNetCore.Identity;
 
 namespace Blockchain_Transactions_Diplom.Controllers
 {
@@ -138,6 +140,13 @@ namespace Blockchain_Transactions_Diplom.Controllers
                 }                
             }
             return View(model);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetAccountInfo()
+        {
+            var userInfo = await _accountService.GetUserInfoAsync(User);
+            return View(userInfo);
         }
 
     }

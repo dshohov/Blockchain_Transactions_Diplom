@@ -5,7 +5,7 @@ using System.Text.RegularExpressions;
 using Blockchain_Transactions_Diplom.ViewModels;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Blockchain_Transactions_Diplom.Models;
-
+using System.Security.Claims;
 
 namespace Blockchain_Transactions_Diplom.Services
 {
@@ -15,14 +15,28 @@ namespace Blockchain_Transactions_Diplom.Services
         private readonly SignInManager<AppUser> _signInManager;
         private readonly IPostmarkEmail _sendGridEmail;
         private readonly RoleManager<IdentityRole> _roleManager;
+        private readonly RSAEncryptor _encryptor;
         public AccountService(UserManager<AppUser> userManager, SignInManager<AppUser> signInManager, IPostmarkEmail sendGridEmail, RoleManager<IdentityRole> roleManager)
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _sendGridEmail = sendGridEmail;
             _roleManager = roleManager;
+            _encryptor = new RSAEncryptor();
         }
-
+        
+        public async Task<AccountInfoViewModel> GetUserInfoAsync(ClaimsPrincipal ActuelUser)
+        {
+            AppUser user = await _userManager.GetUserAsync(ActuelUser);
+            var userInfo = new AccountInfoViewModel()
+            {
+                FirstName = user.FirstName,
+                LastName = user.LastName,
+                Publickey = user.Publickey,
+                PrivateKey = user.PrivateKey
+            };
+            return  userInfo;
+        }
         public string GetResetPassword(string currentUrl)
         {            
             string userId="";
@@ -55,7 +69,7 @@ namespace Blockchain_Transactions_Diplom.Services
         {
             var user = await _userManager.FindByEmailAsync(loginViewModel.UserEmail);
 
-            if (user != null && user.EmailConfirmed)
+            if (user != null)
             {
                 var result = await _signInManager.PasswordSignInAsync(loginViewModel.UserEmail, loginViewModel.Password, loginViewModel.RememberMe, lockoutOnFailure: true);
                 if (result.Succeeded)
@@ -96,8 +110,14 @@ namespace Blockchain_Transactions_Diplom.Services
 
         public async Task<bool> PostRegisterAsync(RegisterViewModel registerViewModel)
         {
-            
-            var user = new AppUser { Email = registerViewModel.Email, FirstName = registerViewModel.FirstName, LastName = registerViewModel.LastName, UserName = registerViewModel.Email};
+            var keys = _encryptor.GenerateKeys();
+            var user = new AppUser { Email = registerViewModel.Email, 
+                                     FirstName = registerViewModel.FirstName, 
+                                     LastName = registerViewModel.LastName, 
+                                     UserName = registerViewModel.Email,
+                                     Publickey = keys.Publickey,
+                                     PrivateKey = keys.PrivateKey
+            };
             var result = await _userManager.CreateAsync(user, registerViewModel.Password);
             await _userManager.AddToRoleAsync(user, "User");
             if (result.Succeeded)
