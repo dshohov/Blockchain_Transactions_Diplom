@@ -13,6 +13,7 @@ namespace Blockchain_Transactions_Diplom.Models
             public string? LastName { get; set; }
             public string? Publickey { get; set; }
             public string? PrivateKey { get; set; }
+            public ulong? Balance { get; set; }
             [NotMapped]
             public string? RoleId { get; set; }
             [NotMapped]

@@ -15,14 +15,17 @@ namespace Blockchain_Transactions_Diplom.Services
         private readonly SignInManager<AppUser> _signInManager;
         private readonly IPostmarkEmail _sendGridEmail;
         private readonly RoleManager<IdentityRole> _roleManager;
-        private readonly RSAEncryptor _encryptor;
-        public AccountService(UserManager<AppUser> userManager, SignInManager<AppUser> signInManager, IPostmarkEmail sendGridEmail, RoleManager<IdentityRole> roleManager)
+        private readonly ICoinService _coinService;
+       
+        public AccountService(UserManager<AppUser> userManager, SignInManager<AppUser> signInManager, IPostmarkEmail sendGridEmail, RoleManager<IdentityRole> roleManager, ICoinService coinService)
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _sendGridEmail = sendGridEmail;
             _roleManager = roleManager;
-            _encryptor = new RSAEncryptor();
+            _coinService = coinService;
+
+
         }
         
         public async Task<AccountInfoViewModel> GetUserInfoAsync(ClaimsPrincipal ActuelUser)
@@ -110,18 +113,24 @@ namespace Blockchain_Transactions_Diplom.Services
 
         public async Task<bool> PostRegisterAsync(RegisterViewModel registerViewModel)
         {
-            var keys = _encryptor.GenerateKeys();
+            ulong firstBalance = 50;
+            var keys = _coinService.GenerateKeyPair();
             var user = new AppUser { Email = registerViewModel.Email, 
                                      FirstName = registerViewModel.FirstName, 
                                      LastName = registerViewModel.LastName, 
                                      UserName = registerViewModel.Email,
                                      Publickey = keys.Publickey,
-                                     PrivateKey = keys.PrivateKey
+                                     PrivateKey = keys.PrivateKey,
+                                     Balance = firstBalance
             };
             var result = await _userManager.CreateAsync(user, registerViewModel.Password);
             await _userManager.AddToRoleAsync(user, "User");
             if (result.Succeeded)
+            {
+                await _coinService.SuperAdminCreateTransaction(user.Publickey, firstBalance);
                 return true;
+            }
+                
             return false;
         }
 

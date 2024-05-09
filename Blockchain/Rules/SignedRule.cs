@@ -21,5 +21,13 @@ class SignedRule<TBlock, TData> : IRule<TBlock> where TBlock : ISignedBlock<TDat
        
 
     }
+
+    public void ExecuteSuperAdmin(IEnumerable<TypedBlock<TBlock>> _, TypedBlock<TBlock> newBlock)
+    {
+        var dataToSign = JsonSerializer.Serialize(newBlock.Data.Data);
+        if (!_encryptor.VerifySign(newBlock.Data.PublicKey, dataToSign, newBlock.Data.Sign))
+            throw new ApplicationException("Block is signed incorrectly");
+
+    }
 }
     

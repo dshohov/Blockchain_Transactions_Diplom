@@ -4,6 +4,8 @@ using Microsoft.AspNetCore.Mvc;
 using Blockchain_Transactions_Diplom.IServices;
 using Blockchain_Transactions_Diplom.Models;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Authorization;
+using System.Data;
 
 namespace Blockchain_Transactions_Diplom.Controllers
 {
@@ -143,6 +145,7 @@ namespace Blockchain_Transactions_Diplom.Controllers
         }
 
         [HttpGet]
+        [Authorize]
         public async Task<IActionResult> GetAccountInfo()
         {
             var userInfo = await _accountService.GetUserInfoAsync(User);

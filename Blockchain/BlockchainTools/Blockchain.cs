@@ -1,5 +1,6 @@
 ﻿
 using System.Collections;
+using System.Runtime.CompilerServices;
 
 class Blockchain : IEnumerable<Block>
 {
@@ -20,7 +21,7 @@ class Blockchain : IEnumerable<Block>
         return block;
     }
 
-    public void AddBlock(Block block)
+    public bool AddBlock(Block block)
     {
         var tail = _bloks.LastOrDefault();
         if (block.ParentHash == tail?.Hash)
@@ -29,15 +30,18 @@ class Blockchain : IEnumerable<Block>
             if (expectedHash == block.Hash)
             {
                 _bloks.Add(block);
+                return true;
             }
             else
             {
-                throw new ApplicationException("Block Hash is invalid");
+                //throw new ApplicationException("Block Hash is invalid");
+                return false;
             }
-            
+
         }
         else
-            throw new ApplicationException($"{block.Hash} is incorrect. Becouse of parent hash. It should be {tail.Hash} but recived {block.ParentHash}");
+            //throw new ApplicationException($"{block.Hash} is incorrect. Becouse of parent hash. It should be {tail.Hash} but recived {block.ParentHash}");
+            return false;
     }
 
     public IEnumerator<Block> GetEnumerator()
