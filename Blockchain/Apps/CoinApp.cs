@@ -23,10 +23,10 @@ public class CoinApp
             new AmountRule()
             );
     }
-    //public long GetBalanceUser(KeyPair user)
-    //{
-    //    return _blockchain.GetBalance(user);
-    //}
+    public ulong GetBalanceUser(KeyPair user)
+    {
+        return _blockchain.GetBalance(user);
+    }
     //public IEnumerable<TypedBlock<TransactionBlock>> GetTransactions(KeyPair keyPair)
     //{
     //    return _blockchain.GetTransactions(keyPair);

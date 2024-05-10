@@ -17,6 +17,5 @@ namespace Blockchain_Transactions_Diplom.IServices
         Task PostForgotPasswordAsync(ForgotPasswordViewModel model, string callbackurl);
         Task<AppUser> GetUserByEmailAsync(string email);
         Task<string> CreateCodeAsync(AppUser user);
-        Task<AccountInfoViewModel> GetUserInfoAsync(ClaimsPrincipal user);
     }
 }

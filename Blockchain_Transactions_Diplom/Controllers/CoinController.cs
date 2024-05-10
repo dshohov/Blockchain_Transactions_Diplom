@@ -25,10 +25,10 @@ namespace Blockchain_Transactions_Diplom.Controllers
         }
         [HttpPost]
         [Authorize]
-        public IActionResult CreateTransactionT(TransactionCreateViewModel transactionCreateViewModel)
-        {
-            var a = _coinService.CreateTransaction(transactionCreateViewModel);
-                return RedirectToAction("Home");
+        public async Task<IActionResult> CreateTransactionT(TransactionCreateViewModel transactionCreateViewModel)
+        {            
+            if(await _coinService.CreateTransaction(transactionCreateViewModel))
+               return RedirectToAction("Home");
             return RedirectToAction("Error");
         }
         

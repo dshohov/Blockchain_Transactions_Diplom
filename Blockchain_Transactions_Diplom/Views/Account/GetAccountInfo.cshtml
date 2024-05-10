@@ -1,10 +1,65 @@
 ﻿@using Blockchain_Transactions_Diplom.ViewModels;
-@model AccountInfoViewModel;
+@using Microsoft.AspNetCore.Identity;
+@inject SignInManager<AppUser> SignInManager
+@inject UserManager<AppUser> UserManager
+@if (SignInManager.IsSignedIn(User))
+{
+    var user = await UserManager.GetUserAsync(User);
 
-<h1>@Model.FirstName</h1>
+    <h1>@user.FirstName</h1>
+    <h1>@user.LastName</h1>
+    <h1>@user.Balance</h1>
+    <p>@user.Publickey</p>
+    <!-- HTML разметка -->
+    <p>
+        <button onclick="togglePrivateKey()">Показать ключ</button>
+        <span id="privateKey" style="display: none;">@user.PrivateKey</span>
+        <button id="copyPrivateKeyBtn" style="display: none;" onclick="copyPrivateKey()">Скопировать ключ</button>
+    </p>
+    
+}
 
-<h2>@Model.LastName</h2>
+<script>
+    // JavaScript для отображения и копирования ключа
+    function togglePrivateKey() {
+        var privateKeyElement = document.getElementById('privateKey');
+        var copyBtn = document.getElementById('copyPrivateKeyBtn');
 
-<h3>@Model.Publickey</h3>
+        if (privateKeyElement.style.display === 'none') {
+            // Показываем приватный ключ и кнопку копирования
+            privateKeyElement.style.display = 'inline';
+            copyBtn.style.display = 'inline';
+        } else {
+            // Скрываем приватный ключ и кнопку копирования
+            privateKeyElement.style.display = 'none';
+            copyBtn.style.display = 'none';
+        }
+    }
 
-<h4>@Model.PrivateKey</h4>
+    function copyPrivateKey() {
+        var privateKeyElement = document.getElementById('privateKey');
+        var tempInput = document.createElement('textarea');
+
+        // Копируем текст внутри элемента span
+        tempInput.value = privateKeyElement.innerText;
+        document.body.appendChild(tempInput);
+
+        // Выбираем текст внутри элемента textarea
+        tempInput.select();
+        tempInput.setSelectionRange(0, 99999); /* Для мобильных устройств */
+
+        // Копируем текст в буфер обмена
+        document.execCommand('copy');
+
+        // Удаляем временный элемент
+        document.body.removeChild(tempInput);
+
+        // Оповещение пользователя о копировании ключа
+        alert('Приватный ключ скопирован в буфер обмена.');
+    }
+
+</script>
+
+
+
+

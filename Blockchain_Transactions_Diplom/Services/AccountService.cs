@@ -28,18 +28,7 @@ namespace Blockchain_Transactions_Diplom.Services
 
         }
         
-        public async Task<AccountInfoViewModel> GetUserInfoAsync(ClaimsPrincipal ActuelUser)
-        {
-            AppUser user = await _userManager.GetUserAsync(ActuelUser);
-            var userInfo = new AccountInfoViewModel()
-            {
-                FirstName = user.FirstName,
-                LastName = user.LastName,
-                Publickey = user.Publickey,
-                PrivateKey = user.PrivateKey
-            };
-            return  userInfo;
-        }
+       
         public string GetResetPassword(string currentUrl)
         {            
             string userId="";

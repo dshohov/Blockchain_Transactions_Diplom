@@ -16,9 +16,12 @@
     <header class="d-flex flex-wrap align-items-center justify-content-center justify-content-md-between py-3 mb-4 border-bottom">
         @if (SignInManager.IsSignedIn(User))
         {
+            var user = await UserManager.GetUserAsync(User);
             <div class="col-md-3 mb-2 mb-md-0">
-                <a class="d-inline-flex link-body-emphasis text-decoration-none nav-link px-2" href="#">Hello @UserManager.GetUserName(User)</a>
+                <a class="d-inline-flex link-body-emphasis text-decoration-none nav-link px-2" asp-action="GetAccountInfo" asp-controller="Account" >Hello @user.FirstName @user.LastName</a>
+                <a class="d-inline-flex link-body-emphasis text-decoration-none nav-link px-2" href="#">Balance: @user.Balance</a>
             </div>
+            
         }
         else
         {
@@ -26,15 +29,18 @@
                 <a class="d-inline-flex link-body-emphasis text-decoration-none nav-link px-2" href="#">Hello Student!</a>
             </div>
         }
-
-
         <ul class="nav nav-pills col-12 col-md-auto mb-2 justify-content-center mb-md-0">
             <div class="btn-group me-2" role="group" aria-label="First group">
                 <li type="button" class="btn btn-primary "><a class="nav-link px-5 text-white" asp-area="" asp-controller="Home" asp-action="Index" class="nav-link px-2">Home</a></li>
+                @if (SignInManager.IsSignedIn(User))
+                {
+                <li type="button" class="btn btn-primary "><a class="nav-link px-5 text-white" asp-area="" asp-controller="Coin" asp-action="CreateTransaction" class="nav-link px-2">Create Transaction</a></li>
 
+                }
             </div>
+        
+        
         </ul>
-
         @if (!SignInManager.IsSignedIn(User))
         {
 

@@ -148,8 +148,7 @@ namespace Blockchain_Transactions_Diplom.Controllers
         [Authorize]
         public async Task<IActionResult> GetAccountInfo()
         {
-            var userInfo = await _accountService.GetUserInfoAsync(User);
-            return View(userInfo);
+            return View();
         }
 
     }

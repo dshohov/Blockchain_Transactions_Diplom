@@ -46,20 +46,20 @@ class TypedBlockchain<T> : IEnumerable<TypedBlock<T>>
         return false;
     }
 
-    //public long GetBalance(KeyPair user)
-    //{
-    //    var previousBlocks = this.Cast<TypedBlock<TransactionBlock>>();
-    //    long balance = 50;        
-    //    var currentUser = user.Publickey;
-    //    foreach (var block in previousBlocks)
-    //    {
-    //        if (block.Data.Data.From == currentUser)
-    //            balance -= block.Data.Data.Amount;
-    //        else if (block.Data.Data.To == currentUser)
-    //            balance += block.Data.Data.Amount;
-    //    }
-    //    return balance;     
-    //}
+    public ulong GetBalance(KeyPair user)
+    {
+        var previousBlocks = this.Cast<TypedBlock<TransactionBlock>>();
+        ulong balance = 50;
+        var currentUser = user.Publickey;
+        foreach (var block in previousBlocks)
+        {
+            if (block.Data.Data.From == currentUser)
+                balance -= block.Data.Data.Amount;
+            else if (block.Data.Data.To == currentUser)
+                balance += block.Data.Data.Amount;
+        }
+        return balance;
+    }
     public IEnumerable<TypedBlock<TransactionBlock>> GetTransactions(KeyPair user)
     {
         var previousBlocks = this.Cast<TypedBlock<TransactionBlock>>();
