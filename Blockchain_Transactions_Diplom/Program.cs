@@ -1,5 +1,6 @@
 using Blockchain_Transactions_Diplom.Data;
 using Blockchain_Transactions_Diplom.Helpers;
+using Blockchain_Transactions_Diplom.Initializer;
 using Blockchain_Transactions_Diplom.Interfaces;
 using Blockchain_Transactions_Diplom.IServices;
 using Blockchain_Transactions_Diplom.Models;
@@ -37,6 +38,7 @@ namespace Blockchain_Transactions_Diplom
                 // options.SignIn.RequireConfirmedAccount = true;
             });
             builder.Services.AddTransient<AdminInitializer>();
+            builder.Services.AddTransient<RecoveryInitializer>();
             builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
                 .AddCookie(options =>
                 {
@@ -52,6 +54,8 @@ namespace Blockchain_Transactions_Diplom
                 var serviceProvider = scope.ServiceProvider;
                 var dataInitializer = serviceProvider.GetRequiredService<AdminInitializer>();
                 dataInitializer.Initialize().Wait();
+                var dataRecoveryInitializer = serviceProvider.GetRequiredService<RecoveryInitializer>();
+                dataRecoveryInitializer.Initialize().Wait();
             }
 
             // Configure the HTTP request pipeline.

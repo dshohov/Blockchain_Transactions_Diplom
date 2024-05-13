@@ -49,7 +49,7 @@ class TypedBlockchain<T> : IEnumerable<TypedBlock<T>>
     public ulong GetBalance(KeyPair user)
     {
         var previousBlocks = this.Cast<TypedBlock<TransactionBlock>>();
-        ulong balance = 50;
+        ulong balance = 0;
         var currentUser = user.Publickey;
         foreach (var block in previousBlocks)
         {
@@ -63,7 +63,7 @@ class TypedBlockchain<T> : IEnumerable<TypedBlock<T>>
     public IEnumerable<TypedBlock<TransactionBlock>> GetTransactions(KeyPair user)
     {
         var previousBlocks = this.Cast<TypedBlock<TransactionBlock>>();
-        ulong balance = 50;
+        ulong balance = 0;
         var currentUser = user.Publickey;
 
         foreach (var block in previousBlocks)

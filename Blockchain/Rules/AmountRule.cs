@@ -3,7 +3,7 @@
     
     public void Execute(IEnumerable<TypedBlock<TransactionBlock>> previousBlocks, TypedBlock<TransactionBlock> newBlock)
     {
-        ulong balance = 50;
+        ulong balance = 0;
         var currentUser = newBlock.Data.Data.From;
         foreach (var block in previousBlocks)
         {
