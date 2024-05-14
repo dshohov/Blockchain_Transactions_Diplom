@@ -48,6 +48,7 @@ namespace Blockchain_Transactions_Diplom.Services
 
         public async Task<IdentityResult> PostResetPasswordAsync(ResetPasswordViewModel resetPasswordViewModel)
         {
+            
             var user = await _userManager.FindByEmailAsync(resetPasswordViewModel.Email);
             if(user != null)
             {

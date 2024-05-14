@@ -1,0 +1,18 @@
+﻿@using Blockchain_Transactions_Diplom.ViewModels;
+@model ExerciseCreateViewModel
+@using Microsoft.AspNetCore.Identity;
+@inject SignInManager<AppUser> SignInManager
+@inject UserManager<AppUser> UserManager
+
+@if (SignInManager.IsSignedIn(User))
+{
+    var user = await UserManager.GetUserAsync(User);
+    <form asp-controller="Exercise" asp-action="CreateExercise" method="post" enctype="multipart/form-data">
+        <!-- Ваши поля формы с правильными атрибутами asp-for и name -->
+        <input asp-for="Name" type="text" class="form-control" placeholder="" required="" name="Name">
+        <input asp-for="Description" type="text" class="form-control" placeholder="" required="" name="Description">
+        <input asp-for="File" type="file" class="form-control"  placeholder="" required="" name="File">       
+        <button class="w-100 btn btn-primary btn-lg" type="submit">Confirm!</button>
+    </form>
+
+}

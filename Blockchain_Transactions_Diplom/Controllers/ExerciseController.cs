@@ -1,0 +1,56 @@
+﻿using Blockchain_Transactions_Diplom.IServices;
+using Blockchain_Transactions_Diplom.Models;
+using Blockchain_Transactions_Diplom.ViewModels;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
+using MimeKit;
+
+namespace Blockchain_Transactions_Diplom.Controllers
+{
+    public class ExerciseController : Controller
+    {
+        private readonly IExerciseService _exerciseService;
+        private readonly UserManager<AppUser> _userManager;
+        public ExerciseController(IExerciseService exerciseService, UserManager<AppUser> userManager) 
+        {
+            _exerciseService = exerciseService;        
+            _userManager = userManager;
+        }
+        [HttpGet]
+        [Authorize]
+        public IActionResult Index()
+        {
+            return View();
+        }
+        [HttpGet]
+        [Authorize]
+        public IActionResult CreateExercise()
+        {
+           
+            return View(new ExerciseCreateViewModel());
+        }
+        [HttpPost]
+        [Authorize]
+        public async Task<IActionResult> CreateExerciseAsync([FromForm] ExerciseCreateViewModel exerciseCreateViewModel)
+        {
+            if (await _exerciseService.CreateExerciseAsync(exerciseCreateViewModel))
+                return RedirectToAction("Index");
+            return RedirectToAction("Error");
+        }
+        [HttpGet]
+        [Authorize]
+        public async Task<IActionResult> DownloadFile(int id)
+        {
+            var exercise = await _exerciseService.GetExerciseByIdAsync(id);
+
+            if (exercise == null || exercise.File == null)
+            {
+                return NotFound();
+            }
+            string mimeType = MimeTypes.GetMimeType(exercise.FileName);
+            var memoryStream = new MemoryStream(exercise.File);
+            return File(memoryStream, mimeType, exercise.FileName);
+        }
+    }
+}

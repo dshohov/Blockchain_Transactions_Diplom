@@ -11,7 +11,7 @@ namespace Blockchain_Transactions_Diplom.Data
                 
         }
         public DbSet<AppUser> AppUser { get; set; }
-
+        public DbSet<Exercise> Exercises{ get; set; }
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);

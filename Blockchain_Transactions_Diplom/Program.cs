@@ -2,8 +2,10 @@ using Blockchain_Transactions_Diplom.Data;
 using Blockchain_Transactions_Diplom.Helpers;
 using Blockchain_Transactions_Diplom.Initializer;
 using Blockchain_Transactions_Diplom.Interfaces;
+using Blockchain_Transactions_Diplom.IRepositories;
 using Blockchain_Transactions_Diplom.IServices;
 using Blockchain_Transactions_Diplom.Models;
+using Blockchain_Transactions_Diplom.Repositories;
 using Blockchain_Transactions_Diplom.Services;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Identity;
@@ -28,6 +30,8 @@ namespace Blockchain_Transactions_Diplom
             builder.Services.AddSingleton<CoinApp>();
             builder.Services.AddSingleton<ICoinService, CoinService>();
             builder.Services.AddTransient<IPostmarkEmail, PostmarkEmail>();
+            builder.Services.AddScoped<IExerciseRepository, ExerciseRepository>();
+            builder.Services.AddScoped<IExerciseService,ExerciseService>();
             builder.Services.Configure<AuthMessageSenderOptions>(builder.Configuration.GetSection("Postmark"));
             builder.Services.Configure<IdentityOptions>(options =>
             {
