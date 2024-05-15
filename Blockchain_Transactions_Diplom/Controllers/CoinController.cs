@@ -2,9 +2,7 @@
 using Blockchain_Transactions_Diplom.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
-using Microsoft.Identity.Client;
-using System.Reflection.Metadata.Ecma335;
+
 
 namespace Blockchain_Transactions_Diplom.Controllers
 {
@@ -14,6 +12,20 @@ namespace Blockchain_Transactions_Diplom.Controllers
         public CoinController(ICoinService coinService)
         {
             _coinService = coinService;
+        }
+        [HttpGet]
+        [Authorize]
+        public async Task<IActionResult> Index()
+        {
+            
+            return View();
+        }
+        [HttpGet]
+        [Authorize]
+        public async Task<IActionResult> BuyCoin()
+        {
+            await _coinService.BuyCoins("3da9bd94-ef03-4035-9b87-6ae0c3203fd1",50);
+            return View();
         }
 
         [HttpGet]

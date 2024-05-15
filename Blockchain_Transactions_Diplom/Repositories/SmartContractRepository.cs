@@ -1,29 +1,28 @@
 ﻿using Blockchain_Transactions_Diplom.Data;
 using Blockchain_Transactions_Diplom.IRepositories;
 using Blockchain_Transactions_Diplom.Models;
-using Blockchain_Transactions_Diplom.ViewModels;
 using Microsoft.EntityFrameworkCore;
-using System.Runtime.CompilerServices;
 
 namespace Blockchain_Transactions_Diplom.Repositories
 {
-    public class ExerciseRepository : IExerciseRepository
+    public class SmartContractRepository : ISmartContractRepository
     {
         private readonly ApplicationDBContext _context;
-        public ExerciseRepository(ApplicationDBContext context) 
+
+        public SmartContractRepository(ApplicationDBContext context)
         {
             _context = context;
         }
 
-        public async Task<bool> CreateExerciseAsync(Exercise exercise)
+        public async Task<bool> CreateSmartContractAsync(SmartContract smartContract)
         {
-            await _context.AddAsync(exercise);
+            await _context.AddAsync(smartContract);
             return await SaveAsync();
         }
-        public async Task<Exercise> GetExerciseAsync(int idExercise) => await _context.Exercises.FirstOrDefaultAsync(x=>x.Id == idExercise);
-        public async Task<bool> DeleteExerciseAsync(int idExercise)
+        public async Task<SmartContract> GetSmartContractAsync(string idSmartContract) => await _context.SmartContracts.FirstOrDefaultAsync(x => x.ContractId == idSmartContract);
+        public async Task<bool> DeleteSmartContractAsync(string idSmartContract)
         {
-            var exercise = await GetExerciseAsync(idExercise);
+            var exercise = await GetSmartContractAsync(idSmartContract);
             await Task.Run(() => _context.Remove(exercise));
             return await SaveAsync();
         }

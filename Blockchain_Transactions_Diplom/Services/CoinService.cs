@@ -1,4 +1,5 @@
-﻿using Blockchain_Transactions_Diplom.IServices;
+﻿using Blockchain_Transactions_Diplom.IHelpers;
+using Blockchain_Transactions_Diplom.IServices;
 using Blockchain_Transactions_Diplom.Models;
 using Blockchain_Transactions_Diplom.ViewModels;
 using Microsoft.AspNetCore.Identity;
@@ -12,12 +13,13 @@ namespace Blockchain_Transactions_Diplom.Services
         private CoinApp _coinApp;
         private readonly RSAEncryptor _encryptor;
         private readonly IServiceProvider _serviceProvider;
-
-        public CoinService(CoinApp coinApp, IServiceProvider serviceProvider)
+        private readonly ILiqPayInvoice _liqPay;
+        public CoinService(CoinApp coinApp, IServiceProvider serviceProvider, ILiqPayInvoice liqPay)
         {
             _coinApp = coinApp;
             _encryptor = new RSAEncryptor();
             _serviceProvider = serviceProvider;
+            _liqPay = liqPay;
         }
         public KeyPair GenerateKeyPair() => _encryptor.GenerateKeys();
         private async Task<KeyPair> GetUserKeyPairSuperAdminAsync()
@@ -62,6 +64,15 @@ namespace Blockchain_Transactions_Diplom.Services
             var keys = await GetUserKeyPairSuperAdminAsync();
             if (await Task.Run(() => _coinApp.PerformSuperAdminTransaction(keys, publicKeyUser, amount)))
             {
+                using (var scope = _serviceProvider.CreateScope())
+                {
+                    var _userManager = scope.ServiceProvider.GetRequiredService<UserManager<AppUser>>();
+                    var usersList = await _userManager.GetUsersInRoleAsync("User");
+                    var userTo = usersList.FirstOrDefault(x => x.Publickey == publicKeyUser);
+                    userTo.Balance += amount;
+                    await _userManager.UpdateAsync(userTo);
+
+                }
                 return true;
             }
             return false;
@@ -72,6 +83,17 @@ namespace Blockchain_Transactions_Diplom.Services
             var balance = await Task.Run(() => _coinApp.GetBalanceUser(keyPair));
             return balance;
 
+        }
+    
+        public async Task<bool> BuyCoins(string idUser,int countCoins)
+        {
+            using (var scope = _serviceProvider.CreateScope())
+            {
+                var _userManager = scope.ServiceProvider.GetRequiredService<UserManager<AppUser>>();
+                var user = await _userManager.FindByIdAsync(idUser);
+                await _liqPay.SendInvoiceAsync(user.Email, countCoins, "221");
+                return await SuperAdminCreateTransaction(user.Publickey, (ulong)countCoins);
+            }           
         }
     }
 }

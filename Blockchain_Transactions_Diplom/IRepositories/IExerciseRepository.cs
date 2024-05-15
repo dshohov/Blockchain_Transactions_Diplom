@@ -7,7 +7,6 @@ namespace Blockchain_Transactions_Diplom.IRepositories
     {
         public Task<Exercise> GetExerciseAsync(int idExercise);
         public Task<bool> CreateExerciseAsync(Exercise exercise);
-        public Task<bool> DeleteExerciseAsync(int idExercise);
-        public Task<Exercise> GetExerciseByIdAsync(int idExercise);
+        public Task<bool> DeleteExerciseAsync(int idExercise);       
     }
 }

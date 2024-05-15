@@ -1,5 +1,6 @@
 using Blockchain_Transactions_Diplom.Data;
 using Blockchain_Transactions_Diplom.Helpers;
+using Blockchain_Transactions_Diplom.IHelpers;
 using Blockchain_Transactions_Diplom.Initializer;
 using Blockchain_Transactions_Diplom.Interfaces;
 using Blockchain_Transactions_Diplom.IRepositories;
@@ -30,9 +31,13 @@ namespace Blockchain_Transactions_Diplom
             builder.Services.AddSingleton<CoinApp>();
             builder.Services.AddSingleton<ICoinService, CoinService>();
             builder.Services.AddTransient<IPostmarkEmail, PostmarkEmail>();
+            builder.Services.AddTransient<ILiqPayInvoice, LiqPayInvoice>();
             builder.Services.AddScoped<IExerciseRepository, ExerciseRepository>();
             builder.Services.AddScoped<IExerciseService,ExerciseService>();
+            builder.Services.AddScoped<ISmartContractRepository, SmartContractRepository>();
+            builder.Services.AddScoped<ISmartContractService, SmartContractService>();  
             builder.Services.Configure<AuthMessageSenderOptions>(builder.Configuration.GetSection("Postmark"));
+            builder.Services.Configure<LiqPayOptions>(builder.Configuration.GetSection("LiqPay"));
             builder.Services.Configure<IdentityOptions>(options =>
             {
                 options.Password.RequiredLength = 5;
