@@ -37,7 +37,7 @@ namespace Blockchain_Transactions_Diplom.Initializer
                         {
                             if(user.Balance > 0)
                             {
-                                _coinService.SuperAdminCreateTransaction(user.Publickey, (ulong)user.Balance);
+                                await _coinService.SuperAdminCreateTransactionForRecovery(user.Publickey, (ulong)user.Balance);
                             }
                         }
                     }

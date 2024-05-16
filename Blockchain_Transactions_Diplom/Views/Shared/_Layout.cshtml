@@ -20,6 +20,8 @@
             <div class="col-md-3 mb-2 mb-md-0">
                 <a class="d-inline-flex link-body-emphasis text-decoration-none nav-link px-2" asp-action="GetAccountInfo" asp-controller="Account" >Hello @user.FirstName @user.LastName</a>
                 <a class="d-inline-flex link-body-emphasis text-decoration-none nav-link px-2" href="#">Balance: @user.Balance</a>
+                <a class="d-inline-flex link-body-emphasis text-decoration-none nav-link px-2" asp-action="BuyCoin" asp-controller="Coin">Buy Coin</a>
+
             </div>
             
         }

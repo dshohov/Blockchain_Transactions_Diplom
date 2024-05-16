@@ -16,6 +16,10 @@
         <span id="privateKey" style="display: none;">@user.PrivateKey</span>
         <button id="copyPrivateKeyBtn" style="display: none;" onclick="copyPrivateKey()">Скопировать ключ</button>
     </p>
+    if (@user.LastOrderId != "")
+    {
+        <a asp-action="CheckInvoice" asp-controller="Coin" asp-route-userId="@user.Id">Check my last Invoice!</a>
+    }
     
 }
 

@@ -14,6 +14,8 @@ namespace Blockchain_Transactions_Diplom.Models
             public string? Publickey { get; set; }
             public string? PrivateKey { get; set; }
             public ulong? Balance { get; set; }
+            public string? LastOrderId { get; set; }
+            public ulong? LastCoinBuyCount { get; set; }
             [NotMapped]
             public string? RoleId { get; set; }
             [NotMapped]

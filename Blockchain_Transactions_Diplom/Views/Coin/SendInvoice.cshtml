@@ -1,0 +1,14 @@
+﻿@using Blockchain_Transactions_Diplom.ViewModels;
+@using Microsoft.AspNetCore.Identity;
+@inject SignInManager<AppUser> SignInManager
+@inject UserManager<AppUser> UserManager
+@if (SignInManager.IsSignedIn(User))
+{
+    var user = await UserManager.GetUserAsync(User);
+
+    if (@user.LastOrderId != "")
+    {
+        <h1>Go to your email, pay your bill. And click the check payment status button, if everything is fine you will receive your coins. If you don't receive them, try again by going to the Account Info page</h1>
+        <a asp-action="CheckInvoice" asp-controller="Coin" asp-route-userId="@user.Id">Check my last Invoice!</a>
+    }
+}

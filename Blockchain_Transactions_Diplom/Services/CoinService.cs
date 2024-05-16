@@ -62,7 +62,7 @@ namespace Blockchain_Transactions_Diplom.Services
         public async Task<bool> SuperAdminCreateTransaction(string publicKeyUser, ulong amount)
         {
             var keys = await GetUserKeyPairSuperAdminAsync();
-            if (await Task.Run(() => _coinApp.PerformSuperAdminTransaction(keys, publicKeyUser, amount)))
+            if (_coinApp.PerformSuperAdminTransaction(keys, publicKeyUser, amount))
             {
                 using (var scope = _serviceProvider.CreateScope())
                 {
@@ -77,6 +77,15 @@ namespace Blockchain_Transactions_Diplom.Services
             }
             return false;
         }
+        public async Task<bool> SuperAdminCreateTransactionForRecovery(string publicKeyUser, ulong amount)
+        {
+            var keys = await GetUserKeyPairSuperAdminAsync();
+            if (await Task.Run(() => _coinApp.PerformSuperAdminTransaction(keys, publicKeyUser, amount)))
+            {                
+                return true;
+            }
+            return false;
+        }
 
         public async Task<ulong> BalanceСheck(KeyPair keyPair)
         {
@@ -85,15 +94,42 @@ namespace Blockchain_Transactions_Diplom.Services
 
         }
     
-        public async Task<bool> BuyCoins(string idUser,int countCoins)
+        public async Task BuyCoins(string idUser,int countCoins)
         {
             using (var scope = _serviceProvider.CreateScope())
             {
                 var _userManager = scope.ServiceProvider.GetRequiredService<UserManager<AppUser>>();
+                
                 var user = await _userManager.FindByIdAsync(idUser);
-                await _liqPay.SendInvoiceAsync(user.Email, countCoins, "221");
-                return await SuperAdminCreateTransaction(user.Publickey, (ulong)countCoins);
+                var sha256 = new SHA256Hash();
+                var orderId = sha256.GetHash(idUser + "#" + countCoins);
+                await _liqPay.SendInvoiceAsync(user.Email, countCoins, orderId);
+                user.LastOrderId = orderId;
+                user.LastCoinBuyCount = (ulong)countCoins;
+                await _userManager.UpdateAsync(user);
             }           
+        }
+        public async Task<bool> CheckInvoiceCoin(string idUser)
+        {
+            using (var scope = _serviceProvider.CreateScope())
+            { 
+                var _userManager = scope.ServiceProvider.GetRequiredService<UserManager<AppUser>>();
+                var user = await _userManager.FindByIdAsync(idUser);                
+                var orderId = user.LastOrderId;
+                var checkInvoice = await _liqPay.CheckInvoiceAsync(orderId);
+
+                if (checkInvoice)
+                {
+                    if(await SuperAdminCreateTransaction(user.Publickey, (ulong)user.LastCoinBuyCount))
+                    {
+                        user.LastCoinBuyCount = 0;
+                        user.LastOrderId = "";
+                        await _userManager.UpdateAsync(user);
+                        return true;
+                    }                   
+                }
+                return false;
+            }
         }
     }
 }

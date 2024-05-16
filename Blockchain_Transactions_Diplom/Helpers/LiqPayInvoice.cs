@@ -45,11 +45,28 @@ namespace Blockchain_Transactions_Diplom.Helpers
                 Language = LiqPayRequestLanguage.UK,
                 Goods = list_prod_for_check
 
-            };
+            }; 
+            
             var liqPayClient = new LiqPayClient(publicKey, privateKey);
             //liqPayClient.IsCnbSandbox = true;
             var response = await liqPayClient.RequestAsync("request", invoiceRequest);
 
+        }
+        public async Task<bool> CheckInvoiceAsync(string orderId)
+        {
+            // send invoce by email
+            var invoiceRequest2 = new LiqPayRequest
+            {
+                Version = 3,
+                OrderId = orderId,
+                Action = LiqPayRequestAction.Status,
+            };
+            var liqPayClient = new LiqPayClient(Options.PublicKey, Options.PrivateKey);
+            //liqPayClient.IsCnbSandbox = true;
+            var response = await liqPayClient.RequestAsync("request", invoiceRequest2);
+            if(response.Status == LiqPayResponseStatus.Success)
+                return true;
+            return false;
         }
     }
 }

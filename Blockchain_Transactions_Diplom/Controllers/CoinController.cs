@@ -1,8 +1,11 @@
 ﻿using Blockchain_Transactions_Diplom.IServices;
 using Blockchain_Transactions_Diplom.ViewModels;
+using LiqPay.SDK.Dto.Enums;
+using LiqPay.SDK.Dto;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-
+using System.Security.Cryptography.X509Certificates;
+using LiqPay.SDK;
 
 namespace Blockchain_Transactions_Diplom.Controllers
 {
@@ -23,11 +26,27 @@ namespace Blockchain_Transactions_Diplom.Controllers
         [HttpGet]
         [Authorize]
         public async Task<IActionResult> BuyCoin()
+        {            
+            return View(new CoinBuyCoinViewModel());
+        }
+        [HttpPost]
+        [Authorize]
+        public async Task<IActionResult> BuyCoin(CoinBuyCoinViewModel coinBuyCoinViewModel)
         {
-            await _coinService.BuyCoins("3da9bd94-ef03-4035-9b87-6ae0c3203fd1",50);
+            await _coinService.BuyCoins(coinBuyCoinViewModel.UserId,coinBuyCoinViewModel.CountCoin);
+            return RedirectToAction("SendInvoice");
+        }
+        [HttpGet,Authorize]
+        public IActionResult SendInvoice()
+        {
             return View();
         }
-
+        [HttpGet]
+        [Authorize]
+        public async Task<IActionResult> CheckInvoice(string userId)
+        {
+            return View(await _coinService.CheckInvoiceCoin(userId));
+        }
         [HttpGet]
         [Authorize]
         public IActionResult CreateTransaction()

@@ -1,1 +1,20 @@
-﻿<h1>test</h1>
+﻿@using Blockchain_Transactions_Diplom.ViewModels;
+@model CoinBuyCoinViewModel
+@using Microsoft.AspNetCore.Identity;
+@inject SignInManager<AppUser> SignInManager
+@inject UserManager<AppUser> UserManager
+
+
+@if (SignInManager.IsSignedIn(User))
+{
+    var user = await UserManager.GetUserAsync(User);
+
+    <form asp-controller="Coin" asp-action="BuyCoin" method="post" class="needs-validation" novalidate="">
+        <!-- Ваши поля формы с правильными атрибутами asp-for и name -->
+        <input asp-for="UserId" type="text" value="@user.Id" readonly hidden class="form-control" placeholder="" required="" name="UserId">
+        <input asp-for="CountCoin" type="number" class="form-control" placeholder="" required="" name="CountCoin">
+        
+        <button class="w-100 btn btn-primary btn-lg" type="submit">Confirm!</button>
+    </form>
+   
+}
