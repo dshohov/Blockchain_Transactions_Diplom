@@ -25,7 +25,27 @@ namespace Blockchain_Transactions_Diplom.Controllers
         }
         [HttpGet]
         [Authorize]
-        public async Task<IActionResult> BuyCoin()
+        public IActionResult SoldCoins()
+        {            
+            return View(new SoldCoinsViewModel());
+        }
+        [HttpPost]
+        [Authorize]
+        public async Task<IActionResult> SoldCoinsAsync(SoldCoinsViewModel soldCoinsViewModel)
+        {
+            if(await _coinService.SoldCoins(soldCoinsViewModel))
+                return RedirectToAction("MessegeAfterSoldCoins");
+            return RedirectToAction("Error");
+        }
+        [HttpGet]
+        [Authorize]
+        public IActionResult MessegeAfterSoldCoins()
+        {
+            return View();
+        }
+        [HttpGet]
+        [Authorize]
+        public IActionResult BuyCoin()
         {            
             return View(new CoinBuyCoinViewModel());
         }

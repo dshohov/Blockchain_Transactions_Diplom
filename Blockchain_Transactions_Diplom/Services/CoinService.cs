@@ -59,6 +59,24 @@ namespace Blockchain_Transactions_Diplom.Services
                
             return false;
         }
+        public async Task<bool> SoldCoinTransaction(TransactionCreateViewModel transactionCreateViewModel)
+        {
+            var fromKeys = new KeyPair(transactionCreateViewModel.FromPublicKey, transactionCreateViewModel.FromPrivateKey);
+            if (await Task.Run(() => _coinApp.PerformTransaction(fromKeys, transactionCreateViewModel.ToPublicKey, transactionCreateViewModel.Amount)))
+            {
+                using (var scope = _serviceProvider.CreateScope())
+                {
+                    var _userManager = scope.ServiceProvider.GetRequiredService<UserManager<AppUser>>();
+                    var usersList = await _userManager.GetUsersInRoleAsync("User");
+                    var userFrom = usersList.FirstOrDefault(x => x.Publickey == transactionCreateViewModel.FromPublicKey);                   
+                    userFrom.Balance -= transactionCreateViewModel.Amount;
+                    await _userManager.UpdateAsync(userFrom);
+                }
+                return true;
+            }
+
+            return false;
+        }
         public async Task<bool> SuperAdminCreateTransaction(string publicKeyUser, ulong amount)
         {
             var keys = await GetUserKeyPairSuperAdminAsync();
@@ -130,6 +148,31 @@ namespace Blockchain_Transactions_Diplom.Services
                 }
                 return false;
             }
+        }
+
+        public async Task<bool> SoldCoins(SoldCoinsViewModel soldCoinsViewModel)
+        {
+            using (var scope = _serviceProvider.CreateScope())
+            {
+                var _userManager = scope.ServiceProvider.GetRequiredService<UserManager<AppUser>>();
+                var user = await _userManager.FindByIdAsync(soldCoinsViewModel.UserId);               
+                if (user.Balance >= soldCoinsViewModel.CountCoins)
+                {
+                    var superAdminKeys = await GetUserKeyPairSuperAdminAsync();
+                    var transaction = new TransactionCreateViewModel()
+                    {
+                        FromPublicKey = user.Publickey,
+                        FromPrivateKey = user.PrivateKey,
+                        ToPublicKey = superAdminKeys.Publickey,
+                        Amount = (ulong)soldCoinsViewModel.CountCoins
+                    };
+                    if (await SoldCoinTransaction(transaction))
+                    {                        
+                        return true;
+                    }
+                }
+            }
+            return false;
         }
     }
 }
