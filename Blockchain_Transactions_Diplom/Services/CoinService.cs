@@ -40,10 +40,17 @@ namespace Blockchain_Transactions_Diplom.Services
         public async Task<bool> CreateTransaction(TransactionCreateViewModel transactionCreateViewModel)
         {
             var fromKeys = new KeyPair(transactionCreateViewModel.FromPublicKey, transactionCreateViewModel.FromPrivateKey);
+            var comision = transactionCreateViewModel.Amount * 0.05;
+            if (comision == transactionCreateViewModel.Amount)
+                comision = 1;
+            transactionCreateViewModel.Amount -= (ulong)comision;
             if (await Task.Run(() => _coinApp.PerformTransaction(fromKeys, transactionCreateViewModel.ToPublicKey, transactionCreateViewModel.Amount)))
             {
                 using (var scope = _serviceProvider.CreateScope())
                 {
+                    var superAdminKeys = await GetUserKeyPairSuperAdminAsync();
+                    await Task.Run(() => _coinApp.PerformTransaction(fromKeys, superAdminKeys.Publickey, (ulong)comision));
+
                     var _userManager = scope.ServiceProvider.GetRequiredService<UserManager<AppUser>>();
                     var usersList = await _userManager.GetUsersInRoleAsync("User");
                     var userFrom =  usersList.FirstOrDefault(x=>x.Publickey == transactionCreateViewModel.FromPublicKey);

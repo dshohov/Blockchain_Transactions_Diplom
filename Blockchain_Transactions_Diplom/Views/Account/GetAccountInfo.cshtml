@@ -19,6 +19,8 @@
     if (@user.LastOrderId != "")
     {
         <a asp-action="CheckInvoice" asp-controller="Coin" asp-route-userId="@user.Id">Check my last Invoice!</a>
+        <a class="d-inline-flex link-body-emphasis text-decoration-none nav-link px-2" asp-action="BuyCoin" asp-controller="Coin">Buy Coin</a>
+        <a class="d-inline-flex link-body-emphasis text-decoration-none nav-link px-2" asp-action="SoldCoin" asp-controller="Coin">Sold Coin</a>
     }
     
 }
