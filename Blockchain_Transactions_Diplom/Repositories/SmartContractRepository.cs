@@ -2,6 +2,7 @@
 using Blockchain_Transactions_Diplom.IRepositories;
 using Blockchain_Transactions_Diplom.Models;
 using Microsoft.EntityFrameworkCore;
+using System.Reflection.Metadata.Ecma335;
 
 namespace Blockchain_Transactions_Diplom.Repositories
 {
@@ -31,6 +32,8 @@ namespace Blockchain_Transactions_Diplom.Repositories
             await Task.Run(() => _context.Update(smartContract));
             return await SaveAsync();
         }
+
+        public async Task<IQueryable<SmartContract>> GetFreeSmartContracts() => await Task.Run(()=> _context.SmartContracts.Where(x=>x.PublicKeyExecutor == null));
 
         private async Task<bool> SaveAsync()
         {

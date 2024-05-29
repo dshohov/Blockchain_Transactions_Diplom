@@ -30,6 +30,16 @@ namespace Blockchain_Transactions_Diplom.Controllers
                 return RedirectToAction("Index");
             return RedirectToAction("Error", "Home");
         }
+        [HttpGet]
+        public async Task<IActionResult> GetFreeSmartContracts()
+        {
+            return View(await _smartContractService.GetFreeSmartContracts());
+        }
 
+        
+        public async Task<IActionResult> Details(string idSmartContract)
+        {
+            return View(await _smartContractService.GetSmartContractById(idSmartContract));
+        }
     }
 }

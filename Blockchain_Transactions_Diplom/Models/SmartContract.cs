@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Blockchain_Transactions_Diplom.Models
 {
@@ -11,5 +12,7 @@ namespace Blockchain_Transactions_Diplom.Models
         public string? IdExercise { get; set; }
         public ulong? ContractValue { get; set; }
         public bool? IsConfirmed { get; set; }
+        [NotMapped]
+        public Exercise Exercise { get; set; }
     }
 }

@@ -7,5 +7,7 @@ namespace Blockchain_Transactions_Diplom.IServices
     {
         Task<bool> AddExecutorInSmartContractAsync(SmartContractAddExecutor smartContractAddExecutor);
         Task<bool> AddSmartContactAsync(SmartContractCreateViewModel smartContractCreateViewModel);
+        Task<IQueryable<SmartContract>> GetFreeSmartContracts();
+        Task<SmartContract> GetSmartContractById(string contractId);
     }
 }

@@ -10,9 +10,11 @@ namespace Blockchain_Transactions_Diplom.Services
     public class SmartContractService : ISmartContractService
     {
         private readonly ISmartContractRepository _smartContractRepository;
-        public SmartContractService(ISmartContractRepository smartContractRepository)
+        private readonly IExerciseRepository _exerciseRepository;
+        public SmartContractService(ISmartContractRepository smartContractRepository, IExerciseRepository exerciseRepository)
         {
             _smartContractRepository = smartContractRepository;
+            _exerciseRepository = exerciseRepository;
         }
 
         public async Task<bool> AddSmartContactAsync(SmartContractCreateViewModel smartContractCreateViewModel)
@@ -42,9 +44,24 @@ namespace Blockchain_Transactions_Diplom.Services
                 return true;
             return false;
         }
+        
+        public async Task<IQueryable<SmartContract>> GetFreeSmartContracts()
+        {
+            var smartContracts = await _smartContractRepository.GetFreeSmartContracts();
+            foreach(var smartContract in smartContracts.ToList())
+            {
+                smartContract.Exercise = await _exerciseRepository.GetExerciseAsync(smartContract.IdExercise);
+            }
+            return smartContracts;
+        }
 
+        public async Task<SmartContract> GetSmartContractById(string contractId)
+        {
+            var smartContract = await _smartContractRepository.GetSmartContractAsync(contractId);
+            smartContract.Exercise = await _exerciseRepository.GetExerciseAsync(smartContract.IdExercise);
+            return smartContract;
 
-
+        }
 
 
 

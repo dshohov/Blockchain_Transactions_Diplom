@@ -1,0 +1,8 @@
+﻿@model SmartContract
+
+<h1>@Model.Exercise.Name </h1>
+<h2>@Model.ContractValue</h2>
+<h3>@Model.Exercise.Description</h3>
+<a asp-action="DownloadFile" asp-controller="Exercise" asp-route-id="@Model.IdExercise">Download File</a>
+
+<a asp-action="AcceptSmartContract" asp-controller="SmartContract" asp-route-idSmartContract="">Accept Contract</a>
