@@ -5,7 +5,7 @@ namespace Blockchain_Transactions_Diplom.IServices
 {
     public interface IExerciseService
     {
-        public Task<bool> CreateExerciseAsync(ExerciseCreateViewModel exerciseCreateViewModel);
-        public Task<Exercise> GetExerciseByIdAsync(int idExercise);
+        Task<string> CreateExerciseAsync(ExerciseCreateViewModel exerciseCreateViewModel);
+        public Task<Exercise> GetExerciseByIdAsync(string idExercise);
     }
 }

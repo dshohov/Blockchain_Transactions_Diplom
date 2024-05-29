@@ -112,11 +112,8 @@ namespace Blockchain_Transactions_Diplom.Migrations
 
             modelBuilder.Entity("Blockchain_Transactions_Diplom.Models.Exercise", b =>
                 {
-                    b.Property<int?>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int?>("Id"));
+                    b.Property<string>("Id")
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("Description")
                         .HasColumnType("nvarchar(max)");
@@ -146,8 +143,8 @@ namespace Blockchain_Transactions_Diplom.Migrations
                     b.Property<decimal?>("ContractValue")
                         .HasColumnType("decimal(20,0)");
 
-                    b.Property<int?>("IdExercise")
-                        .HasColumnType("int");
+                    b.Property<string>("IdExercise")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<bool?>("IsConfirmed")
                         .HasColumnType("bit");

@@ -1,0 +1,18 @@
+﻿@using Blockchain_Transactions_Diplom.ViewModels;
+@model SmartContractCreateViewModel
+@using Microsoft.AspNetCore.Identity;
+@inject SignInManager<AppUser> SignInManager
+@inject UserManager<AppUser> UserManager
+
+@if (SignInManager.IsSignedIn(User))
+{
+    var user = await UserManager.GetUserAsync(User);
+    <form asp-controller="SmartContract" asp-action="CreateSmartContract" method="post" enctype="multipart/form-data">
+        <!-- Ваши поля формы с правильными атрибутами asp-for и name -->
+        <input asp-for="IdExercise" type="text" value="@Model.IdExercise" readonly hidden name="IdExercise">
+        <input asp-for="PublicKeyCreator" type="text" value="@user.Publickey" readonly hidden name="PublicKeyCreator">
+        <input asp-for="ContractValue" type="number" class="form-control" placeholder="" required="" name="ContractValue">
+        <button class="w-100 btn btn-primary btn-lg" type="submit">Confirm!</button>
+    </form>
+
+}

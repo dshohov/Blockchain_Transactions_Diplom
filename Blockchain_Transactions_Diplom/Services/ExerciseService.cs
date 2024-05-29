@@ -8,6 +8,7 @@ using Postmark.Model.Suppressions;
 using Microsoft.Identity.Client;
 using System.Runtime.CompilerServices;
 using System.Security.Claims;
+using System.Text;
 
 namespace Blockchain_Transactions_Diplom.Services
 {
@@ -23,10 +24,11 @@ namespace Blockchain_Transactions_Diplom.Services
             _httpContextAccessor = httpContextAccessor;
         }
 
-        public async Task<bool> CreateExerciseAsync(ExerciseCreateViewModel exerciseCreateViewModel)
+        public async Task<string> CreateExerciseAsync(ExerciseCreateViewModel exerciseCreateViewModel)
         {
             var exercise = new Exercise()
             {
+                Id = sha256(exerciseCreateViewModel.Name + exerciseCreateViewModel.Description),
                 Name = exerciseCreateViewModel.Name,
                 Description = exerciseCreateViewModel.Description,                
                 UserId = _httpContextAccessor.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier)?.Value
@@ -40,11 +42,27 @@ namespace Blockchain_Transactions_Diplom.Services
                     exercise.File = memoryStream.ToArray();
                 }
             }
-            return await _exerciseRepository.CreateExerciseAsync(exercise);
+            if (await _exerciseRepository.CreateExerciseAsync(exercise))
+                return exercise.Id;
+            return "";
         }
-        public async Task<Exercise> GetExerciseByIdAsync(int idExercise)
+        public async Task<Exercise> GetExerciseByIdAsync(string idExercise)
         { 
             return await _exerciseRepository.GetExerciseAsync(idExercise);
+        }
+
+
+
+        private static string sha256(string randomString)
+        {
+            var crypt = new System.Security.Cryptography.SHA256Managed();
+            var hash = new System.Text.StringBuilder();
+            byte[] crypto = crypt.ComputeHash(Encoding.UTF8.GetBytes(randomString));
+            foreach (byte theByte in crypto)
+            {
+                hash.Append(theByte.ToString("x2"));
+            }
+            return hash.ToString();
         }
     }
 }

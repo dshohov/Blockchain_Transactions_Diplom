@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Blockchain_Transactions_Diplom.Migrations
 {
     [DbContext(typeof(ApplicationDBContext))]
-    [Migration("20240514211316_UpdateExerciseModel")]
-    partial class UpdateExerciseModel
+    [Migration("20240529170402_InitialCreateMigration")]
+    partial class InitialCreateMigration
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -51,8 +51,14 @@ namespace Blockchain_Transactions_Diplom.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<decimal?>("LastCoinBuyCount")
+                        .HasColumnType("decimal(20,0)");
+
                     b.Property<string>("LastName")
                         .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("LastOrderId")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("LockoutEnabled")
@@ -109,11 +115,8 @@ namespace Blockchain_Transactions_Diplom.Migrations
 
             modelBuilder.Entity("Blockchain_Transactions_Diplom.Models.Exercise", b =>
                 {
-                    b.Property<int?>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int?>("Id"));
+                    b.Property<string>("Id")
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("Description")
                         .HasColumnType("nvarchar(max)");
@@ -133,6 +136,31 @@ namespace Blockchain_Transactions_Diplom.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Exercises");
+                });
+
+            modelBuilder.Entity("Blockchain_Transactions_Diplom.Models.SmartContract", b =>
+                {
+                    b.Property<string>("ContractId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<decimal?>("ContractValue")
+                        .HasColumnType("decimal(20,0)");
+
+                    b.Property<string>("IdExercise")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool?>("IsConfirmed")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("PublicKeyCreator")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("PublicKeyExecutor")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("ContractId");
+
+                    b.ToTable("SmartContracts");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>

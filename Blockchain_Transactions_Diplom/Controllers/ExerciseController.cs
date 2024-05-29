@@ -34,13 +34,14 @@ namespace Blockchain_Transactions_Diplom.Controllers
         [Authorize]
         public async Task<IActionResult> CreateExerciseAsync([FromForm] ExerciseCreateViewModel exerciseCreateViewModel)
         {
-            if (await _exerciseService.CreateExerciseAsync(exerciseCreateViewModel))
-                return RedirectToAction("Index");
+            var idExercise = await _exerciseService.CreateExerciseAsync(exerciseCreateViewModel);
+            if (idExercise != "")
+                return RedirectToAction("CreateSmartContract", "SmartContract", new { idExercise = idExercise});
             return RedirectToAction("Error");
         }
         [HttpGet]
         [Authorize]
-        public async Task<IActionResult> DownloadFile(int id)
+        public async Task<IActionResult> DownloadFile(string id)
         {
             var exercise = await _exerciseService.GetExerciseByIdAsync(id);
 

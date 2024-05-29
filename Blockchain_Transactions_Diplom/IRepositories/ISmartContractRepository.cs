@@ -4,8 +4,9 @@ namespace Blockchain_Transactions_Diplom.IRepositories
 {
     public interface ISmartContractRepository
     {
-        public Task<bool> CreateSmartContractAsync(SmartContract smartContract);
-        public Task<SmartContract> GetSmartContractAsync(string idSmartContract);
-        public Task<bool> DeleteSmartContractAsync(string idSmartContract);
+        Task<bool> UpdateStateSmartContractAsync(SmartContract smartContract);
+        Task<bool> CreateSmartContractAsync(SmartContract smartContract);
+        Task<SmartContract> GetSmartContractAsync(string idSmartContract);
+        Task<bool> DeleteSmartContractAsync(string idSmartContract);
     }
 }
