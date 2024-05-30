@@ -1,8 +1,17 @@
 ﻿@model SmartContract
+@using Microsoft.AspNetCore.Identity;
+@inject SignInManager<AppUser> SignInManager
+@inject UserManager<AppUser> UserManager
 
 <h1>@Model.Exercise.Name </h1>
 <h2>@Model.ContractValue</h2>
 <h3>@Model.Exercise.Description</h3>
 <a asp-action="DownloadFile" asp-controller="Exercise" asp-route-id="@Model.IdExercise">Download File</a>
 
-<a asp-action="AcceptSmartContract" asp-controller="SmartContract" asp-route-idSmartContract="">Accept Contract</a>
+
+@if (SignInManager.IsSignedIn(User))
+{
+    var user = await UserManager.GetUserAsync(User);
+    <a asp-action="AcceptSmartContract" asp-controller="SmartContract" asp-route-idSmartContract="@Model.ContractId" asp-route-userPublicKey="@user.Publickey">Accept Contract</a>
+
+}

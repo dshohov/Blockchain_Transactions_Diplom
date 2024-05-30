@@ -12,5 +12,6 @@ namespace Blockchain_Transactions_Diplom.IServices
         public Task BuyCoins(string idUser, int countCoins);
         public Task<bool> CheckInvoiceCoin(string idUser);
         public Task<bool> SoldCoins(SoldCoinsViewModel soldCoinsViewModel);
+        public Task<bool> ReturnCoinsToSuperAdmin(string userId, ulong amounCoins);
     }
 }

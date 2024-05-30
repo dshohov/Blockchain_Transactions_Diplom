@@ -28,7 +28,7 @@
         else
         {
             <div class="col-md-3 mb-2 mb-md-0">
-                <a class="d-inline-flex link-body-emphasis text-decoration-none nav-link px-2" href="#">Hello Student!</a>
+                <a class="d-inline-flex link-body-emphasis text-decoration-none nav-link px-2" href="#">Hello!</a>
             </div>
         }
         <ul class="nav nav-pills col-12 col-md-auto mb-2 justify-content-center mb-md-0">
@@ -37,7 +37,7 @@
                 @if (SignInManager.IsSignedIn(User))
                 {
                 <li type="button" class="btn btn-primary "><a class="nav-link px-5 text-white" asp-area="" asp-controller="Coin" asp-action="CreateTransaction" class="nav-link px-2">Create Transaction</a></li>
-                <li type="button" class="btn btn-primary "><a class="nav-link px-5 text-white" asp-area="" asp-controller="Exercise" asp-action="Index" class="nav-link px-2">Exercise</a></li>
+                <li type="button" class="btn btn-primary "><a class="nav-link px-5 text-white" asp-area="" asp-controller="SmartContract" asp-action="GetFreesmartContracts" class="nav-link px-2">Exercise</a></li>
                 }
             </div>
         

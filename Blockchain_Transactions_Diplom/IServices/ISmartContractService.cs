@@ -8,6 +8,9 @@ namespace Blockchain_Transactions_Diplom.IServices
         Task<bool> AddExecutorInSmartContractAsync(SmartContractAddExecutor smartContractAddExecutor);
         Task<bool> AddSmartContactAsync(SmartContractCreateViewModel smartContractCreateViewModel);
         Task<IQueryable<SmartContract>> GetFreeSmartContracts();
-        Task<SmartContract> GetSmartContractById(string contractId);
+        Task<SmartContract> GetSmartContractWithExerciseById(string contractId);
+        Task<bool> AcceptSmartContract(string smartContractId, string userPublicKey);
+        Task<IQueryable<SmartContract>> GetMySmartContracts(string creatorPublicKey);
+        Task<IQueryable<SmartContract>> GetTasksCompletedByMe(string executorPublicKey);
     }
 }

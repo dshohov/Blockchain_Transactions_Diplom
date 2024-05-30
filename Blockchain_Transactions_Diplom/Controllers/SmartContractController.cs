@@ -39,7 +39,22 @@ namespace Blockchain_Transactions_Diplom.Controllers
         
         public async Task<IActionResult> Details(string idSmartContract)
         {
-            return View(await _smartContractService.GetSmartContractById(idSmartContract));
+            return View(await _smartContractService.GetSmartContractWithExerciseById(idSmartContract));
+        }
+
+        public async Task<IActionResult> AcceptSmartContract(string userPublicKey, string idSmartContract)
+        {
+            await _smartContractService.AcceptSmartContract(userPublicKey, idSmartContract);
+            return View();
+        }
+
+        public async Task<IActionResult> MySmartContracts(string creatorPublicKey)
+        {
+            return View(await _smartContractService.GetMySmartContracts(creatorPublicKey));
+        }
+        public async Task<IActionResult> TasksCompletedByMe(string executorPublicKey)
+        {
+            return View(await _smartContractService.GetTasksCompletedByMe(executorPublicKey));
         }
     }
 }

@@ -181,5 +181,30 @@ namespace Blockchain_Transactions_Diplom.Services
             }
             return false;
         }
+
+        public async Task<bool> ReturnCoinsToSuperAdmin(string userId,ulong amounCoins)
+        {
+            using (var scope = _serviceProvider.CreateScope())
+            {
+                var _userManager = scope.ServiceProvider.GetRequiredService<UserManager<AppUser>>();
+                var user = await _userManager.FindByIdAsync(userId);
+                if (user.Balance >= amounCoins)
+                {
+                    var superAdminKeys = await GetUserKeyPairSuperAdminAsync();
+                    var transaction = new TransactionCreateViewModel()
+                    {
+                        FromPublicKey = user.Publickey,
+                        FromPrivateKey = user.PrivateKey,
+                        ToPublicKey = superAdminKeys.Publickey,
+                        Amount = (ulong)amounCoins
+                    };
+                    if (await SoldCoinTransaction(transaction))
+                    {
+                        return true;
+                    }
+                }
+            }
+            return false;
+        }
     }
 }

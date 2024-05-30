@@ -9,5 +9,8 @@ namespace Blockchain_Transactions_Diplom.IRepositories
         Task<SmartContract> GetSmartContractAsync(string idSmartContract);
         Task<bool> DeleteSmartContractAsync(string idSmartContract);
         Task<IQueryable<SmartContract>> GetFreeSmartContracts();
+
+        Task<IQueryable<SmartContract>> GetSmartContractsByUserPublicKey(string creatorPublicKey);
+        Task<IQueryable<SmartContract>> GetTasksCompletedByMe(string executorPublicKey);
     }
 }

@@ -40,6 +40,15 @@ namespace Blockchain_Transactions_Diplom.Repositories
             var saved = await _context.SaveChangesAsync();
             return saved > 0 ? true : false;
         }
+
+        public async Task<IQueryable<SmartContract>> GetSmartContractsByUserPublicKey(string creatorPublicKey)
+        {
+            return await Task.Run(()=> _context.SmartContracts.Where(x=>x.PublicKeyCreator == creatorPublicKey));
+        }
         
+        public async Task<IQueryable<SmartContract>> GetTasksCompletedByMe(string executorPublicKey)
+        {
+            return await Task.Run(() => _context.SmartContracts.Where(x => x.PublicKeyExecutor == executorPublicKey));
+        }
     }
 }
