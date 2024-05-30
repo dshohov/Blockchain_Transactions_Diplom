@@ -13,5 +13,12 @@
 {
     var user = await UserManager.GetUserAsync(User);
     <a asp-action="AcceptSmartContract" asp-controller="SmartContract" asp-route-idSmartContract="@Model.ContractId" asp-route-userPublicKey="@user.Publickey">Accept Contract</a>
-
+    if(Model.PublicKeyExecutor == user.Publickey)
+    {
+        <a asp-action="ExecutorSendAnsewr" asp-controller="SmartContract" asp-route-idExercise="@Model.IdExercise">Send Answer</a>
+    }
+    if (Model.Exercise.FileNameAnswer != null)
+    {
+        <a asp-action="DownloadFileAnswer" asp-controller="Exercise" asp-route-id="@Model.IdExercise">Get Answer from Executor</a>
+    }
 }

@@ -56,5 +56,17 @@ namespace Blockchain_Transactions_Diplom.Controllers
         {
             return View(await _smartContractService.GetTasksCompletedByMe(executorPublicKey));
         }
+        [HttpGet]
+        public IActionResult ExecutorSendAnsewr(string idExercise)
+        {
+            return View(new ExerciseExecutorSendAnswerViewModel() { IdExercise = idExercise});
+        }
+        [HttpPost]
+        public async Task<IActionResult> ExecutorSendAnsewrAsync(ExerciseExecutorSendAnswerViewModel exerciseExecutorSendAnswerViewModel)
+        {
+            if(await _smartContractService.ExecutorSendAnsewrAsync(exerciseExecutorSendAnswerViewModel))
+                return RedirectToAction("GetFreeSmartContracts");
+            return RedirectToAction("Error", "Home");
+        }
     }
 }

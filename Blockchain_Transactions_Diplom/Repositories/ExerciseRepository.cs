@@ -27,6 +27,11 @@ namespace Blockchain_Transactions_Diplom.Repositories
             await Task.Run(() => _context.Remove(exercise));
             return await SaveAsync();
         }
+        public async Task<bool> UpdateExerciseAsync(Exercise exercise)
+        {
+            await Task.Run(()=>_context.Update(exercise));
+            return await SaveAsync();
+        }
         private async Task<bool> SaveAsync()
         {
             var saved = await _context.SaveChangesAsync();

@@ -53,5 +53,19 @@ namespace Blockchain_Transactions_Diplom.Controllers
             var memoryStream = new MemoryStream(exercise.File);
             return File(memoryStream, mimeType, exercise.FileName);
         }
+        [HttpGet]
+        [Authorize]
+        public async Task<IActionResult> DownloadFileAnswer(string id)
+        {
+            var exercise = await _exerciseService.GetExerciseByIdAsync(id);
+
+            if (exercise == null || exercise.FileAnswer == null)
+            {
+                return NotFound();
+            }
+            string mimeType = MimeTypes.GetMimeType(exercise.FileNameAnswer);
+            var memoryStream = new MemoryStream(exercise.FileAnswer);
+            return File(memoryStream, mimeType, exercise.FileNameAnswer);
+        }
     }
 }

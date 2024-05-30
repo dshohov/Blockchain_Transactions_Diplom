@@ -94,7 +94,23 @@ namespace Blockchain_Transactions_Diplom.Services
             }
             return smartContracts;
         }
-
+        public async Task<bool> ExecutorSendAnsewrAsync(ExerciseExecutorSendAnswerViewModel exerciseExecutorSendAnswerViewModel)
+        {
+            var exercise = await _exerciseRepository.GetExerciseAsync(exerciseExecutorSendAnswerViewModel.IdExercise);
+            exercise.AnswerExecutor = exerciseExecutorSendAnswerViewModel.AnswerExecutor;
+            if (exerciseExecutorSendAnswerViewModel.File != null)
+            {
+                using (var memoryStream = new MemoryStream())
+                {
+                    await exerciseExecutorSendAnswerViewModel.File.CopyToAsync(memoryStream);
+                    exercise.FileNameAnswer = exerciseExecutorSendAnswerViewModel.File.FileName;
+                    exercise.FileAnswer = memoryStream.ToArray();
+                }
+            }
+            if (await _exerciseRepository.UpdateExerciseAsync(exercise))
+                return true;
+            return false;
+        }
 
 
 
