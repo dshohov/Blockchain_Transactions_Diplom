@@ -24,15 +24,16 @@ namespace Blockchain_Transactions_Diplom.Services
         {
             var idSmartContactComponent = smartContractCreateViewModel.PublicKeyCreator + smartContractCreateViewModel.ContractValue + smartContractCreateViewModel.IdExercise;
             var commision = smartContractCreateViewModel.ContractValue * 0.10;
+            var amount = smartContractCreateViewModel.ContractValue - smartContractCreateViewModel.ContractValue * 0.10;
+
             var smartContract = new SmartContract()
             {
                 ContractId = sha256(idSmartContactComponent),
-                ContractValue = smartContractCreateViewModel.ContractValue,
+                ContractValue = (ulong)amount,
                 PublicKeyCreator = smartContractCreateViewModel.PublicKeyCreator,
                 IdExercise = smartContractCreateViewModel.IdExercise,
                 IsConfirmed = false
             };
-            var amount = smartContractCreateViewModel.ContractValue - smartContractCreateViewModel.ContractValue * 0.10;
             if (await _coinService.ReturnCoinsToSuperAdmin(smartContractCreateViewModel.UserId,(ulong)commision) && await _coinService.ReturnCoinsToSuperAdmin(smartContractCreateViewModel.UserId, (ulong)amount))
                 if (await _smartContractRepository.CreateSmartContractAsync(smartContract))
                     return true;
@@ -112,7 +113,27 @@ namespace Blockchain_Transactions_Diplom.Services
             return false;
         }
 
+        public async Task<bool> CreatorSendAnsewrAsync(ExerciseCreatorSendAnswerViewModel exerciseCreatorSendAnswerViewModel)
+        {
+            var exercise = await _exerciseRepository.GetExerciseAsync(exerciseCreatorSendAnswerViewModel.IdExercise);
+            exercise.AnswerCreator = exerciseCreatorSendAnswerViewModel.AnwerCreator;           
+            if (await _exerciseRepository.UpdateExerciseAsync(exercise))
+                return true;
+            return false;
+        }
 
+        public async Task<bool> PayForWorkAsync(string idExercise)
+        {
+            var smartContract = await _smartContractRepository.GetSmartContractAsync(idExercise);
+            smartContract.IsConfirmed = true;
+            
+            var commision = smartContract.ContractValue * 0.1;
+            var executorGet = smartContract.ContractValue - commision;
+            if(await _coinService.SuperAdminCreateTransaction(smartContract.PublicKeyExecutor, (ulong)executorGet))
+                return await _smartContractRepository.UpdateStateSmartContractAsync(smartContract);
+            return false;
+
+        }
 
 
         private static string sha256(string randomString)

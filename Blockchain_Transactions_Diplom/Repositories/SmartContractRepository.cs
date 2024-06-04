@@ -48,7 +48,7 @@ namespace Blockchain_Transactions_Diplom.Repositories
         
         public async Task<IQueryable<SmartContract>> GetTasksCompletedByMe(string executorPublicKey)
         {
-            return await Task.Run(() => _context.SmartContracts.Where(x => x.PublicKeyExecutor == executorPublicKey));
+            return await Task.Run(() => _context.SmartContracts.Where(x => x.PublicKeyExecutor == executorPublicKey && x.IsConfirmed == false));
         }
     }
 }

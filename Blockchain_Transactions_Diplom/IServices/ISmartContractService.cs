@@ -13,5 +13,7 @@ namespace Blockchain_Transactions_Diplom.IServices
         Task<IQueryable<SmartContract>> GetMySmartContracts(string creatorPublicKey);
         Task<IQueryable<SmartContract>> GetTasksCompletedByMe(string executorPublicKey);
         Task<bool> ExecutorSendAnsewrAsync(ExerciseExecutorSendAnswerViewModel exerciseExecutorSendAnswerViewModel);
+        Task<bool> CreatorSendAnsewrAsync(ExerciseCreatorSendAnswerViewModel exerciseCreatorSendAnswerViewModel);
+        Task<bool> PayForWorkAsync(string idExercise);
     }
 }

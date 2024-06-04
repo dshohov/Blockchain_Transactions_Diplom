@@ -67,5 +67,6 @@ namespace Blockchain_Transactions_Diplom.Controllers
             var memoryStream = new MemoryStream(exercise.FileAnswer);
             return File(memoryStream, mimeType, exercise.FileNameAnswer);
         }
+        
     }
 }

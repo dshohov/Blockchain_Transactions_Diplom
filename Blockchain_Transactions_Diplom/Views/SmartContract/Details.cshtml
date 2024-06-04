@@ -16,9 +16,22 @@
     if(Model.PublicKeyExecutor == user.Publickey)
     {
         <a asp-action="ExecutorSendAnsewr" asp-controller="SmartContract" asp-route-idExercise="@Model.IdExercise">Send Answer</a>
+        <p>Your Answer: @Model.Exercise.AnswerExecutor</p>
+        
+        <p>Creator Answer:  @Model.Exercise.AnswerCreator</p>
     }
-    if (Model.Exercise.FileNameAnswer != null)
+    if (Model.PublicKeyCreator == user.Publickey)
     {
-        <a asp-action="DownloadFileAnswer" asp-controller="Exercise" asp-route-id="@Model.IdExercise">Get Answer from Executor</a>
+        <p>Executor Answer: @Model.Exercise.AnswerExecutor</p>
+
+        <p>Your Answer:  @Model.Exercise.AnswerCreator</p>
+        if(Model.Exercise.FileAnswer != null)
+        {
+            <a asp-action="DownloadFileAnswer" asp-controller="Exercise" asp-route-id="@Model.IdExercise">Get File from Executor</a>
+
+        }
+        <a asp-action="SendReplyToExecutor" asp-controller="SmartContract" asp-route-idExericse="@Model.IdExercise">Send reply to Executor</a>
+        <a asp-action="PayForWork" asp-ciontroller="SmartContract" asp-route-idSmartContract="@Model.ContractId">Pay for work</a>
     }
+
 }
