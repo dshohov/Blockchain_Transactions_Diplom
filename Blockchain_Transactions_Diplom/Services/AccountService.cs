@@ -131,7 +131,7 @@ namespace Blockchain_Transactions_Diplom.Services
 
         public async Task PostForgotPasswordAsync(ForgotPasswordViewModel model,string callbackurl)
         {
-            await _sendGridEmail.SendEmailAsync(model.Email, "Reset Email Confirmation", "Please reset email by going to this " +
+            await _sendGridEmail.SendEmailAsync(model.Email, "Reset Password Confirmation", "Please reset password by going to this " +
                     "<a href=\"" + callbackurl + "\">link</a>");
         }
 

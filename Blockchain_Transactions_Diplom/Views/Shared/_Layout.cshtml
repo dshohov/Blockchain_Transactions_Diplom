@@ -33,7 +33,8 @@
                 @if (SignInManager.IsSignedIn(User))
                 {
                     var user = await UserManager.GetUserAsync(User);
-                    <div class="dropdown text-end">
+                    <div class="dropdown text-end" style="display:flex; ">
+                        <a class="dropdown-item textde" style="color: #6c757d;" href="#">Balance: @user.Balance</a>
                         <a href="#" class="d-block link-body-emphasis text-decoration-none dropdown-toggle"  style="color:#fc81cd" data-bs-toggle="dropdown" aria-expanded="false">
                             <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="#fc81cd" class="rounded-circle bi bi-person-circle" viewBox="0 0 16 16">
                                 <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0" />
@@ -41,9 +42,7 @@
                             </svg>
                         </a>
                         <ul class="dropdown-menu text-small"  style="">
-                            <li>
-                                <a class="dropdown-item textde" style="color:black" href="#">Balance: @user.Balance</a>
-                            </li>
+                           
                             <li><a asp-action="GetAccountInfo" asp-controller="Account" class="dropdown-item">Account Info</a></li>
                             <li>
                                 <a class="dropdown-item" asp-route-creatorPublicKey="@user.Publickey" asp-controller="SmartContract" asp-action="MySmartContracts" >My Exercise</a>
