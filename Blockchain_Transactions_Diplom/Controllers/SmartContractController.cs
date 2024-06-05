@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Blockchain_Transactions_Diplom.Controllers
 {
+    [Authorize]
     public class SmartContractController : Controller
     {
         private readonly ISmartContractService _smartContractService;
