@@ -1,11 +1,57 @@
 ﻿@model bool
 
+<main class="payment-status-container d-flex align-items-center justify-content-center">
+    <div class="payment-status-message p-4 bg-light rounded shadow">
+        @if (Model)
+        {
+            <h1 class="h3 mb-3 fw-normal text-center text-success">Payment Successful</h1>
+            <p class="text-center">We have sent you your coins.</p>
+        }
+        else
+        {
+            <h1 class="h3 mb-3 fw-normal text-center text-danger">Payment Failed</h1>
+            <p class="text-center">
+                Try again! Check payment via LiqPay, then repeat the request to check the payment status in the Account Info tab to receive your tokens.
+            </p>
+        }
+    </div>
+</main>
 
-@if(Model){
-    <h1>Payment was successful, we sent you your coins</h1>
-}
-else{
-    <h1>Payment failed, try again!
-        Check payment via LiqPay. And then repeat the request to check the payment status in the Account Info tab to receive your tokens.
-    </h1>
-}
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        background-color: #f8f9fa;
+    }
+
+    .payment-status-container {
+        min-height: calc(100vh - 200px);
+        padding-top: 60px;
+        padding-bottom: 60px;
+    }
+
+    .payment-status-message {
+        max-width: 500px;
+        margin: auto;
+        text-align: center;
+        background-color: #ffffff;
+        border-radius: 10px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        color: #333;
+    }
+
+    .payment-status-message h1 {
+        margin-bottom: 15px;
+    }
+
+    .text-success {
+        color: #28a745;
+    }
+
+    .text-danger {
+        color: #dc3545;
+    }
+
+    .payment-status-message p {
+        color: #555;
+    }
+</style>

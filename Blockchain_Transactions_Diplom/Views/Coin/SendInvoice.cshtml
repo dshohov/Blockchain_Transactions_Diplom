@@ -1,14 +1,65 @@
-﻿@using Blockchain_Transactions_Diplom.ViewModels;
-@using Microsoft.AspNetCore.Identity;
+﻿@using Blockchain_Transactions_Diplom.ViewModels
+@using Microsoft.AspNetCore.Identity
 @inject SignInManager<AppUser> SignInManager
 @inject UserManager<AppUser> UserManager
-@if (SignInManager.IsSignedIn(User))
-{
-    var user = await UserManager.GetUserAsync(User);
 
-    if (@user.LastOrderId != "")
+<main class="buy-coins-container d-flex align-items-center justify-content-center">
+    @if (SignInManager.IsSignedIn(User))
     {
-        <h1>Go to your email, pay your bill. And click the check payment status button, if everything is fine you will receive your coins. If you don't receive them, try again by going to the Account Info page</h1>
-        <a asp-action="CheckInvoice" asp-controller="Coin" asp-route-userId="@user.Id">Check my last Invoice!</a>
+        var user = await UserManager.GetUserAsync(User);
+
+        if (!string.IsNullOrEmpty(user.LastOrderId))
+        {
+            <div class="instructions p-4 bg-light rounded shadow">
+                <h1 class="h3 mb-3 fw-normal text-center">Complete Your Purchase</h1>
+                <p class="text-center">
+                    Go to your email, pay your bill. Then click the "Check Payment Status" button below. If everything is fine, you will receive your coins. If you don't receive them, try again by going to the Account Info page.
+                </p>
+                <div class="text-center">
+                    <a asp-action="CheckInvoice" asp-controller="Coin" asp-route-userId="@user.Id" class="btn btn-primary">Check my last Invoice!</a>
+                </div>
+            </div>
+        }
     }
-}
+</main>
+
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        background-color: #f8f9fa;
+    }
+
+    .buy-coins-container {
+        min-height: calc(100vh - 200px);
+        padding-top: 60px;
+        padding-bottom: 60px;
+    }
+
+    .instructions {
+        max-width: 600px;
+        margin: auto;
+        text-align: center;
+        background-color: #ffffff;
+        border-radius: 10px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        color: #333;
+    }
+
+    .instructions h1 {
+        margin-bottom: 15px;
+    }
+
+    .instructions p {
+        color: #555;
+    }
+
+    .btn-primary {
+        background-color: #fc81cd;
+        border-color: #fc81cd;
+    }
+
+    .btn-primary:hover {
+        background-color: #e170b6;
+        border-color: #e170b6;
+    }
+</style>

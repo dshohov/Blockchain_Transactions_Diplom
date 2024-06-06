@@ -1,4 +1,39 @@
-﻿
+﻿@page "/SoldCoinsConfirmation"
 
+<main class="confirmation-container d-flex align-items-center justify-content-center">
+    <div class="confirmation-message p-4 bg-light rounded shadow">
+        <h1 class="h3 mb-3 fw-normal text-center">Request Received</h1>
+        <p class="text-center">We have received your request to exchange coins. Please wait for your card to be replenished!</p>
+    </div>
+</main>
 
-<h1>We have received your request to exchange coins, please wait for your card to be replenished!</h1>
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        background-color: #f8f9fa;
+    }
+
+    .confirmation-container {
+        min-height: calc(100vh - 200px);
+        padding-top: 60px;
+        padding-bottom: 60px;
+    }
+
+    .confirmation-message {
+        max-width: 500px;
+        margin: auto;
+        text-align: center;
+        background-color: #ffffff;
+        border-radius: 10px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        color: #333;
+    }
+
+    .confirmation-message h1 {
+        color: #fc81cd;
+    }
+    
+    .confirmation-message p {
+        color: #555;
+    }
+</style>

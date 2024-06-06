@@ -3,35 +3,83 @@
 @inject SignInManager<AppUser> SignInManager
 @inject UserManager<AppUser> UserManager
 
-<h1>@Model.Exercise.Name </h1>
-<h2>@Model.ContractValue</h2>
-<h3>@Model.Exercise.Description</h3>
-<a asp-action="DownloadFile" asp-controller="Exercise" asp-route-id="@Model.IdExercise">Download File</a>
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <h1>@Model.Exercise.Name</h1>
+            <h2>@Model.ContractValue</h2>
+            <h3>@Model.Exercise.Description</h3>
+            <a asp-action="DownloadFile" asp-controller="Exercise" asp-route-id="@Model.IdExercise">Download File</a>
 
-
-@if (SignInManager.IsSignedIn(User))
-{
-    var user = await UserManager.GetUserAsync(User);
-    <a asp-action="AcceptSmartContract" asp-controller="SmartContract" asp-route-idSmartContract="@Model.ContractId" asp-route-userPublicKey="@user.Publickey">Accept Contract</a>
-    if(Model.PublicKeyExecutor == user.Publickey)
-    {
-        <a asp-action="ExecutorSendAnsewr" asp-controller="SmartContract" asp-route-idExercise="@Model.IdExercise">Send Answer</a>
-        <p>Your Answer: @Model.Exercise.AnswerExecutor</p>
-        
-        <p>Creator Answer:  @Model.Exercise.AnswerCreator</p>
-    }
-    if (Model.PublicKeyCreator == user.Publickey)
-    {
-        <p>Executor Answer: @Model.Exercise.AnswerExecutor</p>
-
-        <p>Your Answer:  @Model.Exercise.AnswerCreator</p>
-        if(Model.Exercise.FileAnswer != null)
-        {
-            <a asp-action="DownloadFileAnswer" asp-controller="Exercise" asp-route-id="@Model.IdExercise">Get File from Executor</a>
-
-        }
-        <a asp-action="SendReplyToExecutor" asp-controller="SmartContract" asp-route-idExericse="@Model.IdExercise">Send reply to Executor</a>
-        <a asp-action="PayForWork" asp-ciontroller="SmartContract" asp-route-idSmartContract="@Model.ContractId">Pay for work</a>
-    }
-
+            @if (SignInManager.IsSignedIn(User))
+            {
+                var user = await UserManager.GetUserAsync(User);
+                <div>
+                    <a asp-action="AcceptSmartContract" asp-controller="SmartContract" asp-route-idSmartContract="@Model.ContractId" asp-route-userPublicKey="@user.Publickey" class="btn btn-primary">Accept Contract</a>
+                </div>
+                if (Model.PublicKeyExecutor == user.Publickey)
+                {
+                    <div class="answer">
+                        <h4>Your Answer:</h4>
+                        <p>@Model.Exercise.AnswerExecutor</p>
+                        <h4>Creator Answer:</h4>
+                        <p>@Model.Exercise.AnswerCreator</p>
+                        <a asp-action="ExecutorSendAnsewr" asp-controller="SmartContract" asp-route-idExercise="@Model.IdExercise" class="btn btn-primary">Send Answer</a>
+                    </div>
+                }
+                if (Model.PublicKeyCreator == user.Publickey)
+                {
+                    <div class="answer">
+                        <h4>Executor Answer:</h4>
+                        <p>@Model.Exercise.AnswerExecutor</p>
+                        <h4>Your Answer:</h4>
+                        <p>@Model.Exercise.AnswerCreator</p>
+                        @if (Model.Exercise.FileAnswer != null)
+                        {
+                            <a asp-action="DownloadFileAnswer" asp-controller="Exercise" asp-route-id="@Model.IdExercise" class="btn btn-primary">Get File from Executor</a>
+                        }
+                        <a asp-action="SendReplyToExecutor" asp-controller="SmartContract" asp-route-idExericse="@Model.IdExercise" class="btn btn-primary">Send reply to Executor</a>
+                        <a asp-action="PayForWork" asp-controller="SmartContract" asp-route-idSmartContract="@Model.ContractId" class="btn btn-primary">Pay for work</a>
+                    </div>
+                }
+            }
+        </div>
+    </div>
+</div>
 }
+
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        background-color: #f8f9fa;
+        padding: 50px;
+    }
+
+    h1 {
+        color: #007bff;
+        font-weight: bold;
+    }
+
+    h2 {
+        color: #28a745;
+        font-weight: bold;
+    }
+
+    h3 {
+        color: #6c757d;
+    }
+
+    a {
+        color: #dc3545;
+        text-decoration: none;
+        margin-right: 10px;
+    }
+
+        a:hover {
+            text-decoration: underline;
+        }
+
+    .answer {
+        margin-top: 20px;
+    }
+</style>

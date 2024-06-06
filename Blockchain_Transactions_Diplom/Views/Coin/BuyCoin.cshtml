@@ -8,9 +8,9 @@
 {
     var user = await UserManager.GetUserAsync(User);
 
-    <main class="form-signin-container d-flex align-items-center justify-content-center">
+    <main class="form-buy-container d-flex align-items-center justify-content-center">
 
-        <form class="form-signin w-50 p-4 bg-light rounded shadow" asp-controller="Coin" asp-action="BuyCoin" method="post" role="form">
+        <form class="form-buy w-50 p-4 bg-light rounded shadow" asp-controller="Coin" asp-action="BuyCoin" method="post" role="form">
             <h1 class="h3 mb-3 fw-normal text-center">Buy Coin</h1>
 
             <div class="form-floating mb-3">
@@ -34,49 +34,49 @@
         background-color: #f8f9fa;
     }
 
-    .form-signin-container {
+    .form-buy-container {
         min-height: calc(100vh - 200px); 
         padding-top: 60px; 
         padding-bottom: 60px; 
     }
 
-    .form-signin {
+    .form-buy {
         max-width: 400px;
         margin: auto;
     }
 
-    .form-signin .form-floating {
+    .form-buy .form-floating {
         margin-bottom: 15px;
     }
 
-    .form-signin .form-floating input:focus {
+    .form-buy .form-floating input:focus {
         border-color: #fc81cd;
         box-shadow: 0 0 0 0.25rem rgba(252, 129, 205, 0.25);
     }
 
-    .form-signin .form-floating input {
+    .form-buy .form-floating input {
         border-radius: 0.25rem;
     }
 
-    .form-signin .btn-success {
+    .form-buy .btn-success {
         background-color: #fc81cd;
         border-color: #fc81cd;
     }
 
-    .form-signin .btn-success:hover {
+    .form-buy .btn-success:hover {
         background-color: #e170b6;
         border-color: #e170b6;
     }
 
-    .form-signin .bg-light {
+    .form-buy .bg-light {
         background-color: #ffffff !important;
     }
 
-    .form-signin .shadow {
+    .form-buy .shadow {
         box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     }
 
-    .form-signin .rounded {
+    .form-buy .rounded {
         border-radius: 10px;
     }
 
