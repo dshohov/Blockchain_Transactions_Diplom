@@ -9,16 +9,24 @@
         @if (SignInManager.IsSignedIn(User))
         {
             var user = await UserManager.GetUserAsync(User);
-            <a class="nav-link bg-primary px-5 text-white" asp-area="" asp-controller="Exercise" asp-action="CreateExercise" class="nav-link px-2">Create Exercise</a>
-            <a class="nav-link bg-info px-5 text-white" asp-route-creatorPublicKey="@user.Publickey" asp-controller="SmartContract" asp-action="MySmartContracts" class="nav-link px-2">My Exercise</a>
-            <a class="nav-link bg-warning px-5 text-white" asp-route-executorPublicKey="@user.Publickey" asp-controller="SmartContract" asp-action="TasksCompletedByMe" class="nav-link px-2">Tasks Completed By Me</a>
+            if(user != null)
+            {
+                <a class="nav-link bg-primary px-5 text-white" asp-area="" asp-controller="Exercise" asp-action="CreateExercise" class="nav-link px-2">Create Exercise</a>
+                <a class="nav-link bg-info px-5 text-white" asp-route-creatorPublicKey="@user.Publickey" asp-controller="SmartContract" asp-action="MySmartContracts" class="nav-link px-2">My Exercise</a>
+                <a class="nav-link bg-warning px-5 text-white" asp-route-executorPublicKey="@user.Publickey" asp-controller="SmartContract" asp-action="TasksCompletedByMe" class="nav-link px-2">Tasks Completed By Me</a>
+
+            }
 
         }
     </li>
     @foreach(var item in Model){
         <li class="list-group-item list-group-item-light" style="display:flex; justify-content:space-between;" >
             <div>
-                <h3>@item.Exercise.Name</h3>
+                @if(item.Exercise != null)
+                {
+                    <h3>@item.Exercise.Name</h3>
+
+                }
                 <h4>@item.ContractValue Coins</h4>
                 
             </div>

@@ -2,12 +2,12 @@
 
 
 
-record Block(string ParentHash, string Data, string Hash);
+record Block(string? ParentHash, string Data, string Hash);
 class BlockchainBuilder
 {
     private readonly IHashFunction _hashFunction;
-    private string _tail;
-    public BlockchainBuilder(IHashFunction hashFunction, string tail)
+    private string? _tail;
+    public BlockchainBuilder(IHashFunction hashFunction, string? tail)
     {
         _hashFunction = hashFunction;
         _tail = tail;

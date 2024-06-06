@@ -8,39 +8,29 @@ using MimeKit;
 
 namespace Blockchain_Transactions_Diplom.Controllers
 {
+    [Authorize]
     public class ExerciseController : Controller
     {
         private readonly IExerciseService _exerciseService;
-        private readonly UserManager<AppUser> _userManager;
-        public ExerciseController(IExerciseService exerciseService, UserManager<AppUser> userManager) 
+        public ExerciseController(IExerciseService exerciseService) 
         {
             _exerciseService = exerciseService;        
-            _userManager = userManager;
         }
         [HttpGet]
-        [Authorize]
-        public IActionResult Index()
-        {
-            return View();
-        }
-        [HttpGet]
-        [Authorize]
         public IActionResult CreateExercise()
         {
            
             return View(new ExerciseCreateViewModel());
         }
         [HttpPost]
-        [Authorize]
         public async Task<IActionResult> CreateExerciseAsync([FromForm] ExerciseCreateViewModel exerciseCreateViewModel)
         {
             var idExercise = await _exerciseService.CreateExerciseAsync(exerciseCreateViewModel);
             if (idExercise != "")
                 return RedirectToAction("CreateSmartContract", "SmartContract", new { idExercise = idExercise});
-            return RedirectToAction("Error");
+            return RedirectToAction("Error", "Home");
         }
         [HttpGet]
-        [Authorize]
         public async Task<IActionResult> DownloadFile(string id)
         {
             var exercise = await _exerciseService.GetExerciseByIdAsync(id);
@@ -54,7 +44,6 @@ namespace Blockchain_Transactions_Diplom.Controllers
             return File(memoryStream, mimeType, exercise.FileName);
         }
         [HttpGet]
-        [Authorize]
         public async Task<IActionResult> DownloadFileAnswer(string id)
         {
             var exercise = await _exerciseService.GetExerciseByIdAsync(id);

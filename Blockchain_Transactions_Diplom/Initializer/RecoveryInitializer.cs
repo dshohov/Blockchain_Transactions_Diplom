@@ -17,11 +17,11 @@ namespace Blockchain_Transactions_Diplom.Initializer
             _coinService = coinService;
         }
 
-        public async Task Initialize()
+        public async Task InitializeAsync()
         {
-            await RecoveryBlockchain();
+            await RecoveryBlockchainAsync();
         }
-        private async Task RecoveryBlockchain()
+        private async Task RecoveryBlockchainAsync()
         {
             // Проверяем наличие роли User
             if (await _roleManager.RoleExistsAsync("User"))
@@ -37,7 +37,7 @@ namespace Blockchain_Transactions_Diplom.Initializer
                         {
                             if(user.Balance > 0)
                             {
-                                await _coinService.SuperAdminCreateTransactionForRecovery(user.Publickey, (ulong)user.Balance);
+                                await _coinService.SuperAdminCreateTransactionForRecoveryAsync(user.Publickey, (ulong)user.Balance);
                             }
                         }
                     }

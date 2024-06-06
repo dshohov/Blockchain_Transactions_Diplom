@@ -13,7 +13,11 @@
     {
         <li class="list-group-item list-group-item-light" style="display:flex; justify-content:space-between;">
             <div>
-                <h3>@item.Exercise.Name</h3>
+                @if(item.Exercise != null)
+                {
+                    <h3>@item.Exercise.Name</h3>
+
+                }
                 <h4>@item.ContractValue Coins</h4>
             </div>
             <div class="align-items-center">

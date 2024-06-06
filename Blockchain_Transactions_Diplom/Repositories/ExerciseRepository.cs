@@ -1,9 +1,7 @@
 ﻿using Blockchain_Transactions_Diplom.Data;
 using Blockchain_Transactions_Diplom.IRepositories;
 using Blockchain_Transactions_Diplom.Models;
-using Blockchain_Transactions_Diplom.ViewModels;
 using Microsoft.EntityFrameworkCore;
-using System.Runtime.CompilerServices;
 
 namespace Blockchain_Transactions_Diplom.Repositories
 {
@@ -20,7 +18,13 @@ namespace Blockchain_Transactions_Diplom.Repositories
             await _context.AddAsync(exercise);
             return await SaveAsync();
         }
-        public async Task<Exercise> GetExerciseAsync(string idExercise) => await _context.Exercises.FirstOrDefaultAsync(x=>x.Id == idExercise);
+        public async Task<Exercise> GetExerciseAsync(string idExercise)
+        {
+            var exercise = await _context.Exercises.FirstOrDefaultAsync(x => x.Id == idExercise);
+            if (exercise == null) 
+                return new Exercise();
+            return exercise;
+        }
         public async Task<bool> DeleteExerciseAsync(string idExercise)
         {
             var exercise = await GetExerciseAsync(idExercise);

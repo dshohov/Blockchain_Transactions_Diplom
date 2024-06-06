@@ -13,6 +13,6 @@ namespace Blockchain_Transactions_Diplom.Models
         public ulong? ContractValue { get; set; }
         public bool? IsConfirmed { get; set; }
         [NotMapped]
-        public Exercise Exercise { get; set; }
+        public Exercise? Exercise { get; set; }
     }
 }

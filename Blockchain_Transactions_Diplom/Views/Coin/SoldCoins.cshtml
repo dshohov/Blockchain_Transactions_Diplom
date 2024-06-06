@@ -7,37 +7,40 @@
 @if (SignInManager.IsSignedIn(User))
 {
     var user = await UserManager.GetUserAsync(User);
+    if(user != null)
+    {
+        <main class="form-sell-container d-flex align-items-center justify-content-center">
+            <form class="form-sell w-50 p-4 bg-light rounded shadow" asp-controller="Coin" asp-action="SoldCoins" method="post" role="form">
+                <h1 class="h3 mb-3 fw-normal text-center">Sell Coins</h1>
 
-    <main class="form-sell-container d-flex align-items-center justify-content-center">
-        <form class="form-sell w-50 p-4 bg-light rounded shadow" asp-controller="Coin" asp-action="SoldCoins" method="post" role="form">
-            <h1 class="h3 mb-3 fw-normal text-center">Sell Coins</h1>
+                <div class="form-floating mb-3">
+                    <input asp-for="UserId" type="text" value="@user.Id" hidden readonly class="form-control" placeholder="" required>
+                </div>
 
-            <div class="form-floating mb-3">
-                <input asp-for="UserId" type="text" value="@user.Id" hidden readonly class="form-control" placeholder="" required>
-            </div>
-
-            <div class="form-floating mb-3 card-input">
-                <label asp-for="CardNumber" for="floatingCardNumber">Card Number</label>
-                <div class="card-container">
-                    <div class="card">
-                        <img class="logo" src="~/img/mc_symbol_opt_45_2x.png" />
-                        <input asp-for="CardNumber" type="text" class="form-control card-number" id="floatingCardNumber" placeholder="1234 1234 1234 1234" maxlength="19" required oninput="formatCardNumber(this)">
+                <div class="form-floating mb-3 card-input">
+                    <label asp-for="CardNumber" for="floatingCardNumber">Card Number</label>
+                    <div class="card-container">
+                        <div class="card">
+                            <img class="logo" src="~/img/mc_symbol_opt_45_2x.png" />
+                            <input asp-for="CardNumber" type="text" class="form-control card-number" id="floatingCardNumber" placeholder="1234 1234 1234 1234" maxlength="19" required oninput="formatCardNumber(this)">
+                        </div>
                     </div>
                 </div>
-            </div>
 
-            <div class="form-floating mb-3">
-                <input asp-for="CountCoins" type="number" min="0" max="@user.Balance" oninput="checkAmount(this)" class="form-control" id="floatingCountCoins" placeholder="Count Coins" required>
-                <label asp-for="CountCoins" for="floatingCountCoins">Count Coins</label>
-            </div>
+                <div class="form-floating mb-3">
+                    <input asp-for="CountCoins" type="number" min="0" max="@user.Balance" oninput="checkAmount(this)" class="form-control" id="floatingCountCoins" placeholder="Count Coins" required>
+                    <label asp-for="CountCoins" for="floatingCountCoins">Count Coins</label>
+                </div>
 
-            <div class="invalid-feedback">
-                Your balance is @user.Balance!!!
-            </div>
+                <div class="invalid-feedback">
+                    Your balance is @user.Balance!!!
+                </div>
 
-            <button class="btn btn-success w-100 py-2" type="submit">Confirm!</button>
-        </form>
-    </main>
+                <button class="btn btn-success w-100 py-2" type="submit">Confirm!</button>
+            </form>
+        </main>
+    }
+    
 
     <script>
         function checkAmount(input) {

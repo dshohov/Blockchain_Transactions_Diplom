@@ -3,9 +3,7 @@ using Blockchain_Transactions_Diplom.Interfaces;
 using Blockchain_Transactions_Diplom.IServices;
 using System.Text.RegularExpressions;
 using Blockchain_Transactions_Diplom.ViewModels;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using Blockchain_Transactions_Diplom.Models;
-using System.Security.Claims;
 
 namespace Blockchain_Transactions_Diplom.Services
 {
@@ -24,8 +22,6 @@ namespace Blockchain_Transactions_Diplom.Services
             _sendGridEmail = sendGridEmail;
             _roleManager = roleManager;
             _coinService = coinService;
-
-
         }
         
        
@@ -58,7 +54,7 @@ namespace Blockchain_Transactions_Diplom.Services
             throw new ArgumentNullException();
         }
 
-        public async Task<SignInResult> PostLogin(LoginViewModel loginViewModel)
+        public async Task<SignInResult> PostLoginAsync(LoginViewModel loginViewModel)
         {
             var user = await _userManager.FindByEmailAsync(loginViewModel.UserEmail);
 
@@ -96,7 +92,7 @@ namespace Blockchain_Transactions_Diplom.Services
             
             return registerViewModel;
         }
-        public async Task<RegisterViewModel> FailRegister(RegisterViewModel registerViewModel)
+        public RegisterViewModel FailRegisterAsync(RegisterViewModel registerViewModel)
         {
             return registerViewModel;
         }
@@ -117,7 +113,7 @@ namespace Blockchain_Transactions_Diplom.Services
             await _userManager.AddToRoleAsync(user, "User");
             if (result.Succeeded)
             {
-                await _coinService.SuperAdminCreateTransaction(user.Publickey, firstBalance);
+                await _coinService.SuperAdminCreateTransactionAsync(user.Publickey, firstBalance);
                 return true;
             }
                 

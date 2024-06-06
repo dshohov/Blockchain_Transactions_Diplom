@@ -1,14 +1,12 @@
 ﻿using Blockchain_Transactions_Diplom.IServices;
 using Blockchain_Transactions_Diplom.ViewModels;
-using LiqPay.SDK.Dto.Enums;
-using LiqPay.SDK.Dto;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System.Security.Cryptography.X509Certificates;
-using LiqPay.SDK;
+
 
 namespace Blockchain_Transactions_Diplom.Controllers
 {
+    [Authorize]
     public class CoinController : Controller
     {
         private readonly ICoinService _coinService;
@@ -17,43 +15,31 @@ namespace Blockchain_Transactions_Diplom.Controllers
             _coinService = coinService;
         }
         [HttpGet]
-        [Authorize]
-        public async Task<IActionResult> Index()
-        {
-            
-            return View();
-        }
-        [HttpGet]
-        [Authorize]
         public IActionResult SoldCoins()
         {            
             return View(new SoldCoinsViewModel());
         }
         [HttpPost]
-        [Authorize]
         public async Task<IActionResult> SoldCoinsAsync(SoldCoinsViewModel soldCoinsViewModel)
         {
-            if(await _coinService.SoldCoins(soldCoinsViewModel))
+            if(await _coinService.SoldCoinsAsync(soldCoinsViewModel))
                 return RedirectToAction("MessegeAfterSoldCoins");
-            return RedirectToAction("Error");
+            return RedirectToAction("Error","Home");
         }
         [HttpGet]
-        [Authorize]
         public IActionResult MessegeAfterSoldCoins()
         {
             return View();
         }
         [HttpGet]
-        [Authorize]
         public IActionResult BuyCoin()
         {            
             return View(new CoinBuyCoinViewModel());
         }
         [HttpPost]
-        [Authorize]
         public async Task<IActionResult> BuyCoin(CoinBuyCoinViewModel coinBuyCoinViewModel)
         {
-            await _coinService.BuyCoins(coinBuyCoinViewModel.UserId,coinBuyCoinViewModel.CountCoin);
+            await _coinService.BuyCoinsAsync(coinBuyCoinViewModel.UserId,coinBuyCoinViewModel.CountCoin);
             return RedirectToAction("SendInvoice");
         }
         [HttpGet,Authorize]
@@ -62,25 +48,22 @@ namespace Blockchain_Transactions_Diplom.Controllers
             return View();
         }
         [HttpGet]
-        [Authorize]
         public async Task<IActionResult> CheckInvoice(string userId)
         {
-            return View(await _coinService.CheckInvoiceCoin(userId));
+            return View(await _coinService.CheckInvoiceCoinAsync(userId));
         }
         [HttpGet]
-        [Authorize]
         public IActionResult CreateTransaction()
         {
             var transactionCreateViewModel = new TransactionCreateViewModel();
             return View(transactionCreateViewModel);
         }
         [HttpPost]
-        [Authorize]
         public async Task<IActionResult> CreateTransactionT(TransactionCreateViewModel transactionCreateViewModel)
         {            
-            if(await _coinService.CreateTransaction(transactionCreateViewModel))
+            if(await _coinService.CreateTransactionAsync(transactionCreateViewModel))
                return RedirectToAction("Home");
-            return RedirectToAction("Error");
+            return RedirectToAction("Error","Home");
         }
         
     }

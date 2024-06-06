@@ -8,34 +8,37 @@
 @if (SignInManager.IsSignedIn(User))
 {
     var user = await UserManager.GetUserAsync(User);
-
-    <div class="transaction-create-container">
-        <h4 class="transaction-create-title">Create Transaction</h4>
-        <form asp-controller="Coin" asp-action="CreateTransactionT" method="post" class="transaction-create-form needs-validation" novalidate>
-            <div class="mb-3">
-                <label for="FromPublicKey" class="form-label">Your Public Key</label>
-                <input asp-for="FromPublicKey" style="background-color:white;" value="@user.Publickey" readonly type="text" class="form-control" required>
-            </div>
-            <div class="mb-3">
-                <label for="FromPrivateKey" class="form-label">Your Private Key</label>
-                <input asp-for="FromPrivateKey" type="text" class="form-control" required>
-            </div>
-            <div class="mb-3">
-                <label for="ToPublicKey" class="form-label">To Public Key</label>
-                <input asp-for="ToPublicKey" type="text" class="form-control" required>
-            </div>
-            <div class="mb-3">
-                <label for="Amount" class="form-label">Amount</label>
-                <input asp-for="Amount" type="number" class="form-control" min="0" max="@user.Balance" required oninput="calculateAmount(this.value, @user.Balance)">
-            </div>
-            <div id="transactionInfo" class="text-muted mb-3"></div>
-            <div id="recipientAmountInfo" class="text-muted"></div>
-            <div class="invalid-feedback">
-                Your balance is @user.Balance!!!
-            </div>
-            <button type="submit" class="btn btn-primary btn-lg mt-2 w-100">Confirm!</button>
-        </form>
-    </div>
+    if(user != null)
+    {
+        <div class="transaction-create-container">
+            <h4 class="transaction-create-title">Create Transaction</h4>
+            <form asp-controller="Coin" asp-action="CreateTransactionT" method="post" class="transaction-create-form needs-validation" novalidate>
+                <div class="mb-3">
+                    <label for="FromPublicKey" class="form-label">Your Public Key</label>
+                    <input asp-for="FromPublicKey" style="background-color:white;" value="@user.Publickey" readonly type="text" class="form-control" required>
+                </div>
+                <div class="mb-3">
+                    <label for="FromPrivateKey" class="form-label">Your Private Key</label>
+                    <input asp-for="FromPrivateKey" type="text" class="form-control" required>
+                </div>
+                <div class="mb-3">
+                    <label for="ToPublicKey" class="form-label">To Public Key</label>
+                    <input asp-for="ToPublicKey" type="text" class="form-control" required>
+                </div>
+                <div class="mb-3">
+                    <label for="Amount" class="form-label">Amount</label>
+                    <input asp-for="Amount" type="number" class="form-control" min="0" max="@user.Balance" required oninput="calculateAmount(this.value, @user.Balance)">
+                </div>
+                <div id="transactionInfo" class="text-muted mb-3"></div>
+                <div id="recipientAmountInfo" class="text-muted"></div>
+                <div class="invalid-feedback">
+                    Your balance is @user.Balance!!!
+                </div>
+                <button type="submit" class="btn btn-primary btn-lg mt-2 w-100">Confirm!</button>
+            </form>
+        </div>
+    }
+    
 
     <script>
         function calculateAmount(amount, balance) {

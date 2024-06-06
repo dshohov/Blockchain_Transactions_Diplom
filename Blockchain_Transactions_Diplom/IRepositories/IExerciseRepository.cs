@@ -1,5 +1,4 @@
 ﻿using Blockchain_Transactions_Diplom.Models;
-using Blockchain_Transactions_Diplom.ViewModels;
 
 namespace Blockchain_Transactions_Diplom.IRepositories
 {

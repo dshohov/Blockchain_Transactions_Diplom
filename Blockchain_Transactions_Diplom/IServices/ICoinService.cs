@@ -5,13 +5,12 @@ namespace Blockchain_Transactions_Diplom.IServices
     public interface ICoinService
     {
         public KeyPair GenerateKeyPair();
-        public Task<bool> CreateTransaction(TransactionCreateViewModel transactionCreateViewModel);
-        public Task<bool> SuperAdminCreateTransaction(string publicKeyUser, ulong amount);
-        public Task<bool> SuperAdminCreateTransactionForRecovery(string publicKeyUser, ulong amount);
-        public Task<ulong> BalanceСheck(KeyPair keyPair);
-        public Task BuyCoins(string idUser, int countCoins);
-        public Task<bool> CheckInvoiceCoin(string idUser);
-        public Task<bool> SoldCoins(SoldCoinsViewModel soldCoinsViewModel);
-        public Task<bool> ReturnCoinsToSuperAdmin(string userId, ulong amounCoins);
+        public Task<bool> CreateTransactionAsync(TransactionCreateViewModel transactionCreateViewModel);
+        public Task<bool> SuperAdminCreateTransactionAsync(string publicKeyUser, ulong amount);
+        public Task<bool> SuperAdminCreateTransactionForRecoveryAsync(string publicKeyUser, ulong amount);
+        public Task BuyCoinsAsync(string idUser, int countCoins);
+        public Task<bool> CheckInvoiceCoinAsync(string idUser);
+        public Task<bool> SoldCoinsAsync(SoldCoinsViewModel soldCoinsViewModel);
+        public Task<bool> ReturnCoinsToSuperAdminAsync(string userId, ulong amounCoins);
     }
 }

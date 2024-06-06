@@ -15,12 +15,12 @@ public class AdminInitializer
         _encryptor = new RSAEncryptor();
     }
 
-    public async Task Initialize()
+    public async Task InitializeAsync()
     {
-        await CreateSuperAdmin();
-        await CreateAdmin();
+        await CreateSuperAdminAsync();
+        await CreateAdminAsync();
     }
-    public async Task CreateAdmin()
+    public async Task CreateAdminAsync()
     {
         // Проверяем наличие роли SuperAdmin
         if (!await _roleManager.RoleExistsAsync("Admin"))
@@ -48,7 +48,7 @@ public class AdminInitializer
             await _userManager.AddToRoleAsync(superAdmin, "Admin");
         }
     }
-    public async Task CreateSuperAdmin()
+    public async Task CreateSuperAdminAsync()
     {
         // Проверяем наличие роли SuperAdmin
         if (!await _roleManager.RoleExistsAsync("SuperAdmin"))

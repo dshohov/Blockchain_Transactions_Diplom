@@ -1,7 +1,5 @@
 ﻿using Blockchain_Transactions_Diplom.IHelpers;
 using Microsoft.Extensions.Options;
-using PostmarkDotNet.Model;
-using PostmarkDotNet;
 using LiqPay.SDK.Dto.Enums;
 using LiqPay.SDK.Dto;
 using LiqPay.SDK;

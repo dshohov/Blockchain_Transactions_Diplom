@@ -2,9 +2,8 @@
 using Blockchain_Transactions_Diplom.IServices;
 using Blockchain_Transactions_Diplom.Models;
 using Blockchain_Transactions_Diplom.ViewModels;
-using System.Diagnostics.Contracts;
 using System.Text;
-using XSystem.Security.Cryptography;
+
 
 namespace Blockchain_Transactions_Diplom.Services
 {
@@ -29,14 +28,15 @@ namespace Blockchain_Transactions_Diplom.Services
             var smartContract = new SmartContract()
             {
                 ContractId = sha256(idSmartContactComponent),
-                ContractValue = (ulong)amount,
+                ContractValue = amount != null ? (ulong)amount : 0,
                 PublicKeyCreator = smartContractCreateViewModel.PublicKeyCreator,
                 IdExercise = smartContractCreateViewModel.IdExercise,
                 IsConfirmed = false
             };
-            if (await _coinService.ReturnCoinsToSuperAdmin(smartContractCreateViewModel.UserId,(ulong)commision) && await _coinService.ReturnCoinsToSuperAdmin(smartContractCreateViewModel.UserId, (ulong)amount))
-                if (await _smartContractRepository.CreateSmartContractAsync(smartContract))
-                    return true;
+            if(smartContractCreateViewModel.UserId != null && commision != null && amount != null)
+                if (await _coinService.ReturnCoinsToSuperAdminAsync(smartContractCreateViewModel.UserId,(ulong)commision) && await _coinService.ReturnCoinsToSuperAdminAsync(smartContractCreateViewModel.UserId, (ulong)amount))
+                    if (await _smartContractRepository.CreateSmartContractAsync(smartContract))
+                        return true;
             return false;
 
 
@@ -51,9 +51,9 @@ namespace Blockchain_Transactions_Diplom.Services
             return false;
         }
         
-        public async Task<IQueryable<SmartContract>> GetFreeSmartContracts()
+        public async Task<IQueryable<SmartContract>> GetFreeSmartContractsAsync()
         {
-            var smartContracts = await _smartContractRepository.GetFreeSmartContracts();
+            var smartContracts = await _smartContractRepository.GetFreeSmartContractsAsync();
             foreach(var smartContract in smartContracts.ToList())
             {
                 smartContract.Exercise = await _exerciseRepository.GetExerciseAsync(smartContract.IdExercise);
@@ -61,23 +61,23 @@ namespace Blockchain_Transactions_Diplom.Services
             return smartContracts;
         }
 
-        public async Task<SmartContract> GetSmartContractWithExerciseById(string contractId)
+        public async Task<SmartContract> GetSmartContractWithExerciseByIdAsync(string contractId)
         {
             var smartContract = await _smartContractRepository.GetSmartContractAsync(contractId);
             smartContract.Exercise = await _exerciseRepository.GetExerciseAsync(smartContract.IdExercise);
             return smartContract;
 
         }
-        public async Task<bool> AcceptSmartContract( string userPublicKey, string smartContractId)
+        public async Task<bool> AcceptSmartContractAsync( string userPublicKey, string smartContractId)
         {
             var smartContract = await _smartContractRepository.GetSmartContractAsync(smartContractId);
             smartContract.PublicKeyExecutor = userPublicKey;
             return await _smartContractRepository.UpdateStateSmartContractAsync(smartContract);
         }
 
-        public async Task<IQueryable<SmartContract>> GetMySmartContracts(string creatorPublicKey)
+        public async Task<IQueryable<SmartContract>> GetMySmartContractsAsync(string creatorPublicKey)
         {
-            var smartContracts = await _smartContractRepository.GetSmartContractsByUserPublicKey(creatorPublicKey);
+            var smartContracts = await _smartContractRepository.GetSmartContractsByUserPublicKeyAsync(creatorPublicKey);
             foreach(var smartContract in smartContracts.ToList())
             {
                 
@@ -85,9 +85,9 @@ namespace Blockchain_Transactions_Diplom.Services
             }
             return smartContracts;
         }
-        public async Task<IQueryable<SmartContract>> GetTasksCompletedByMe(string executorPublicKey)
+        public async Task<IQueryable<SmartContract>> GetTasksCompletedByMeAsync(string executorPublicKey)
         {
-            var smartContracts = await _smartContractRepository.GetTasksCompletedByMe(executorPublicKey);
+            var smartContracts = await _smartContractRepository.GetTasksCompletedByMeAsync(executorPublicKey);
             foreach (var smartContract in smartContracts.ToList())
             {
 
@@ -129,8 +129,9 @@ namespace Blockchain_Transactions_Diplom.Services
             
             var commision = smartContract.ContractValue * 0.1;
             var executorGet = smartContract.ContractValue - commision;
-            if(await _coinService.SuperAdminCreateTransaction(smartContract.PublicKeyExecutor, (ulong)executorGet))
-                return await _smartContractRepository.UpdateStateSmartContractAsync(smartContract);
+            if(smartContract.PublicKeyExecutor != null && executorGet != null)
+                if(await _coinService.SuperAdminCreateTransactionAsync(smartContract.PublicKeyExecutor, (ulong)executorGet))
+                    return await _smartContractRepository.UpdateStateSmartContractAsync(smartContract);
             return false;
 
         }
@@ -138,7 +139,7 @@ namespace Blockchain_Transactions_Diplom.Services
 
         private static string sha256(string randomString)
         {
-            var crypt = new System.Security.Cryptography.SHA256Managed();
+            var crypt = new System.Security.Cryptography.HMACSHA256();
             var hash = new System.Text.StringBuilder();
             byte[] crypto = crypt.ComputeHash(Encoding.UTF8.GetBytes(randomString));
             foreach (byte theByte in crypto)

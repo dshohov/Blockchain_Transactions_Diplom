@@ -15,12 +15,6 @@ namespace Blockchain_Transactions_Diplom.Controllers
         }
 
         [HttpGet]
-        public IActionResult Index()
-        {
-            return View();
-        }
-
-        [HttpGet]
         public IActionResult CreateSmartContract(string idExercise)
         {
             return View(new SmartContractCreateViewModel() { IdExercise = idExercise });
@@ -35,28 +29,30 @@ namespace Blockchain_Transactions_Diplom.Controllers
         [HttpGet]
         public async Task<IActionResult> GetFreeSmartContracts()
         {
-            return View(await _smartContractService.GetFreeSmartContracts());
+            return View(await _smartContractService.GetFreeSmartContractsAsync());
         }
 
-        
+        [HttpGet]
         public async Task<IActionResult> Details(string idSmartContract)
         {
-            return View(await _smartContractService.GetSmartContractWithExerciseById(idSmartContract));
+            return View(await _smartContractService.GetSmartContractWithExerciseByIdAsync(idSmartContract));
         }
-
+        [HttpGet]
         public async Task<IActionResult> AcceptSmartContract(string userPublicKey, string idSmartContract)
         {
-            await _smartContractService.AcceptSmartContract(userPublicKey, idSmartContract);
-            return View();
+            if (await _smartContractService.AcceptSmartContractAsync(userPublicKey, idSmartContract))
+                return View();
+            return RedirectToAction("Error","Home");
         }
-
+        [HttpGet]
         public async Task<IActionResult> MySmartContracts(string creatorPublicKey)
         {
-            return View(await _smartContractService.GetMySmartContracts(creatorPublicKey));
+            return View(await _smartContractService.GetMySmartContractsAsync(creatorPublicKey));
         }
+        [HttpGet]
         public async Task<IActionResult> TasksCompletedByMe(string executorPublicKey)
         {
-            return View(await _smartContractService.GetTasksCompletedByMe(executorPublicKey));
+            return View(await _smartContractService.GetTasksCompletedByMeAsync(executorPublicKey));
         }
         [HttpGet]
         public IActionResult ExecutorSendAnsewr(string idExercise)
@@ -71,13 +67,11 @@ namespace Blockchain_Transactions_Diplom.Controllers
             return RedirectToAction("Error", "Home");
         }
         [HttpGet]
-        [Authorize]
         public IActionResult SendReplyToExecutor(string idExericse)
         {
             return View(new ExerciseCreatorSendAnswerViewModel() { IdExercise = idExericse });
         }
         [HttpPost]
-        [Authorize]
         public async Task<IActionResult> SendReplyToExecutor(ExerciseCreatorSendAnswerViewModel exerciseCreatorSendAnswerViewModel)
         {
             if (await _smartContractService.CreatorSendAnsewrAsync(exerciseCreatorSendAnswerViewModel))
@@ -85,7 +79,6 @@ namespace Blockchain_Transactions_Diplom.Controllers
             return RedirectToAction("Error", "Home");
         }
         [HttpGet]
-        [Authorize]
         public async Task<IActionResult> PayForWork(string idSmartContract)
         {
             if (await _smartContractService.PayForWorkAsync(idSmartContract))

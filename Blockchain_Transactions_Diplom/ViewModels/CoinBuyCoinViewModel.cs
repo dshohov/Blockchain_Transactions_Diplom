@@ -2,7 +2,7 @@
 {
     public class CoinBuyCoinViewModel
     {
-        public string UserId { get; set; }
+        public string? UserId { get; set; }
         public int CountCoin { get; set; }
     }
 }

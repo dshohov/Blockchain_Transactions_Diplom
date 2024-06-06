@@ -5,45 +5,53 @@
 
 <div class="container">
     <div class="row justify-content-center">
-        <div class="col-md-8">
-            <h1>@Model.Exercise.Name</h1>
-            <h2>@Model.ContractValue</h2>
-            <h3>@Model.Exercise.Description</h3>
-            <a asp-action="DownloadFile" asp-controller="Exercise" asp-route-id="@Model.IdExercise">Download File</a>
+        @if (Model.Exercise != null)
+        {
+            <div class="col-md-8">
+                <h1>@Model.Exercise.Name</h1>
+                <h2>@Model.ContractValue</h2>
+                <h3>@Model.Exercise.Description</h3>
+                <a asp-action="DownloadFile" asp-controller="Exercise" asp-route-id="@Model.IdExercise">Download File</a>
 
-            @if (SignInManager.IsSignedIn(User))
-            {
-                var user = await UserManager.GetUserAsync(User);
-                <div>
-                    <a asp-action="AcceptSmartContract" asp-controller="SmartContract" asp-route-idSmartContract="@Model.ContractId" asp-route-userPublicKey="@user.Publickey" class="btn btn-primary">Accept Contract</a>
-                </div>
-                if (Model.PublicKeyExecutor == user.Publickey)
+                @if (SignInManager.IsSignedIn(User))
                 {
-                    <div class="answer">
-                        <h4>Your Answer:</h4>
-                        <p>@Model.Exercise.AnswerExecutor</p>
-                        <h4>Creator Answer:</h4>
-                        <p>@Model.Exercise.AnswerCreator</p>
-                        <a asp-action="ExecutorSendAnsewr" asp-controller="SmartContract" asp-route-idExercise="@Model.IdExercise" class="btn btn-primary">Send Answer</a>
-                    </div>
-                }
-                if (Model.PublicKeyCreator == user.Publickey)
-                {
-                    <div class="answer">
-                        <h4>Executor Answer:</h4>
-                        <p>@Model.Exercise.AnswerExecutor</p>
-                        <h4>Your Answer:</h4>
-                        <p>@Model.Exercise.AnswerCreator</p>
-                        @if (Model.Exercise.FileAnswer != null)
+                    var user = await UserManager.GetUserAsync(User);
+                    if(user != null)
+                    {
+                        <div>
+                            <a asp-action="AcceptSmartContract" asp-controller="SmartContract" asp-route-idSmartContract="@Model.ContractId" asp-route-userPublicKey="@user.Publickey" class="btn btn-primary">Accept Contract</a>
+                        </div>
+                        if (Model.PublicKeyExecutor == user.Publickey)
                         {
-                            <a asp-action="DownloadFileAnswer" asp-controller="Exercise" asp-route-id="@Model.IdExercise" class="btn btn-primary">Get File from Executor</a>
+                            <div class="answer">
+                                <h4>Your Answer:</h4>
+                                <p>@Model.Exercise.AnswerExecutor</p>
+                                <h4>Creator Answer:</h4>
+                                <p>@Model.Exercise.AnswerCreator</p>
+                                <a asp-action="ExecutorSendAnsewr" asp-controller="SmartContract" asp-route-idExercise="@Model.IdExercise" class="btn btn-primary">Send Answer</a>
+                            </div>
                         }
-                        <a asp-action="SendReplyToExecutor" asp-controller="SmartContract" asp-route-idExericse="@Model.IdExercise" class="btn btn-primary">Send reply to Executor</a>
-                        <a asp-action="PayForWork" asp-controller="SmartContract" asp-route-idSmartContract="@Model.ContractId" class="btn btn-primary">Pay for work</a>
-                    </div>
+                        if (Model.PublicKeyCreator == user.Publickey)
+                        {
+                            <div class="answer">
+                                <h4>Executor Answer:</h4>
+                                <p>@Model.Exercise.AnswerExecutor</p>
+                                <h4>Your Answer:</h4>
+                                <p>@Model.Exercise.AnswerCreator</p>
+                                @if (Model.Exercise.FileAnswer != null)
+                                {
+                                    <a asp-action="DownloadFileAnswer" asp-controller="Exercise" asp-route-id="@Model.IdExercise" class="btn btn-primary">Get File from Executor</a>
+                                }
+                                <a asp-action="SendReplyToExecutor" asp-controller="SmartContract" asp-route-idExericse="@Model.IdExercise" class="btn btn-primary">Send reply to Executor</a>
+                                <a asp-action="PayForWork" asp-controller="SmartContract" asp-route-idSmartContract="@Model.ContractId" class="btn btn-primary">Pay for work</a>
+                            </div>
+                        }
+                    }
+                    
                 }
-            }
-        </div>
+            </div>
+        }
+       
     </div>
 </div>
 }

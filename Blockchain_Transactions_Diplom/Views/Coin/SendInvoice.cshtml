@@ -7,19 +7,22 @@
     @if (SignInManager.IsSignedIn(User))
     {
         var user = await UserManager.GetUserAsync(User);
-
-        if (!string.IsNullOrEmpty(user.LastOrderId))
+        if (user != null)
         {
-            <div class="instructions p-4 bg-light rounded shadow">
-                <h1 class="h3 mb-3 fw-normal text-center">Complete Your Purchase</h1>
-                <p class="text-center">
-                    Go to your email, pay your bill. Then click the "Check Payment Status" button below. If everything is fine, you will receive your coins. If you don't receive them, try again by going to the Account Info page.
-                </p>
-                <div class="text-center">
-                    <a asp-action="CheckInvoice" asp-controller="Coin" asp-route-userId="@user.Id" class="btn btn-primary">Check my last Invoice!</a>
+            if (!string.IsNullOrEmpty(user.LastOrderId))
+            {
+                <div class="instructions p-4 bg-light rounded shadow">
+                    <h1 class="h3 mb-3 fw-normal text-center">Complete Your Purchase</h1>
+                    <p class="text-center">
+                        Go to your email, pay your bill. Then click the "Check Payment Status" button below. If everything is fine, you will receive your coins. If you don't receive them, try again by going to the Account Info page.
+                    </p>
+                    <div class="text-center">
+                        <a asp-action="CheckInvoice" asp-controller="Coin" asp-route-userId="@user.Id" class="btn btn-primary">Check my last Invoice!</a>
+                    </div>
                 </div>
-            </div>
+            }
         }
+        
     }
 </main>
 

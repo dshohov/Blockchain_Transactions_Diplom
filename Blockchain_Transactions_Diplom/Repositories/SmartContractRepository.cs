@@ -2,7 +2,6 @@
 using Blockchain_Transactions_Diplom.IRepositories;
 using Blockchain_Transactions_Diplom.Models;
 using Microsoft.EntityFrameworkCore;
-using System.Reflection.Metadata.Ecma335;
 
 namespace Blockchain_Transactions_Diplom.Repositories
 {
@@ -20,7 +19,13 @@ namespace Blockchain_Transactions_Diplom.Repositories
             await _context.AddAsync(smartContract);
             return await SaveAsync();
         }
-        public async Task<SmartContract> GetSmartContractAsync(string idSmartContract) => await _context.SmartContracts.FirstOrDefaultAsync(x => x.ContractId == idSmartContract);
+        public async Task<SmartContract> GetSmartContractAsync(string idSmartContract)
+        {
+            var smartContract = await _context.SmartContracts.FirstOrDefaultAsync(x => x.ContractId == idSmartContract);
+            if (smartContract == null)
+                return new SmartContract();
+            return smartContract;
+        }
         public async Task<bool> DeleteSmartContractAsync(string idSmartContract)
         {
             var exercise = await GetSmartContractAsync(idSmartContract);
@@ -33,7 +38,7 @@ namespace Blockchain_Transactions_Diplom.Repositories
             return await SaveAsync();
         }
 
-        public async Task<IQueryable<SmartContract>> GetFreeSmartContracts() => await Task.Run(()=> _context.SmartContracts.Where(x=>x.PublicKeyExecutor == null));
+        public async Task<IQueryable<SmartContract>> GetFreeSmartContractsAsync() => await Task.Run(()=> _context.SmartContracts.Where(x=>x.PublicKeyExecutor == null));
 
         private async Task<bool> SaveAsync()
         {
@@ -41,12 +46,12 @@ namespace Blockchain_Transactions_Diplom.Repositories
             return saved > 0 ? true : false;
         }
 
-        public async Task<IQueryable<SmartContract>> GetSmartContractsByUserPublicKey(string creatorPublicKey)
+        public async Task<IQueryable<SmartContract>> GetSmartContractsByUserPublicKeyAsync(string creatorPublicKey)
         {
             return await Task.Run(()=> _context.SmartContracts.Where(x=>x.PublicKeyCreator == creatorPublicKey));
         }
         
-        public async Task<IQueryable<SmartContract>> GetTasksCompletedByMe(string executorPublicKey)
+        public async Task<IQueryable<SmartContract>> GetTasksCompletedByMeAsync(string executorPublicKey)
         {
             return await Task.Run(() => _context.SmartContracts.Where(x => x.PublicKeyExecutor == executorPublicKey && x.IsConfirmed == false));
         }

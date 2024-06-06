@@ -8,25 +8,29 @@
     @if (SignInManager.IsSignedIn(User))
     {
         var user = await UserManager.GetUserAsync(User);
-        <form class="form-create w-50 p-4 bg-light  rounded shadow" asp-controller="SmartContract" asp-action="CreateSmartContract" method="post" enctype="multipart/form-data">
-            <h1 class="h3 mb-3 fw-normal text-center">Create a New Exercise</h1>
-            <input asp-for="IdExercise" type="text" value="@Model.IdExercise" readonly hidden name="IdExercise">
-            <input asp-for="UserId" type="text" value="@user.Id" readonly hidden name="UserId">
-            <input asp-for="PublicKeyCreator" type="text" value="@user.Publickey" readonly hidden name="PublicKeyCreator">
+        if(user != null)
+        {
+            <form class="form-create w-50 p-4 bg-light  rounded shadow" asp-controller="SmartContract" asp-action="CreateSmartContract" method="post" enctype="multipart/form-data">
+                <h1 class="h3 mb-3 fw-normal text-center">Create a New Exercise</h1>
+                <input asp-for="IdExercise" type="text" value="@Model.IdExercise" readonly hidden name="IdExercise">
+                <input asp-for="UserId" type="text" value="@user.Id" readonly hidden name="UserId">
+                <input asp-for="PublicKeyCreator" type="text" value="@user.Publickey" readonly hidden name="PublicKeyCreator">
 
-            <div class="mb-4 form-floating">
-                <input id="contractValue" type="text" name="ContractValue" class="form-control contractValue" oninput="calculateCommission()" placeholder="ContractValue" required>
-                <label for="contractValue">Contract Value</label>
+                <div class="mb-4 form-floating">
+                    <input id="contractValue" type="text" name="ContractValue" class="form-control contractValue" oninput="calculateCommission()" placeholder="ContractValue" required>
+                    <label for="contractValue">Contract Value</label>
 
-            </div>
+                </div>
 
-            <div class="mb-4 form-floating">
-                <label asp-for="ContractValue" class="form-label">Commission (10%) Therefore the executor will receive</label>
-                <input asp-for="ContractValue" name="CommissionValue" type="number" class="form-control" readonly>
-            </div>
+                <div class="mb-4 form-floating">
+                    <label asp-for="ContractValue" class="form-label">Commission (10%) Therefore the executor will receive</label>
+                    <input asp-for="ContractValue" name="CommissionValue" type="number" class="form-control" readonly>
+                </div>
 
-            <button class="btn btn-success w-100 py-2" type="submit">Confirm!</button>
-        </form>
+                <button class="btn btn-success w-100 py-2" type="submit">Confirm!</button>
+            </form>
+        }
+       
     }
 </main>
 <script>

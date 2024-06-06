@@ -62,9 +62,9 @@ namespace Blockchain_Transactions_Diplom
             {
                 var serviceProvider = scope.ServiceProvider;
                 var dataInitializer = serviceProvider.GetRequiredService<AdminInitializer>();
-                dataInitializer.Initialize().Wait();
+                dataInitializer.InitializeAsync().Wait();
                 var dataRecoveryInitializer = serviceProvider.GetRequiredService<RecoveryInitializer>();
-                dataRecoveryInitializer.Initialize().Wait();
+                dataRecoveryInitializer.InitializeAsync().Wait();
             }
 
             // Configure the HTTP request pipeline.
