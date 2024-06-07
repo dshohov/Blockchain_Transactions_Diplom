@@ -2,27 +2,96 @@
 @using Microsoft.AspNetCore.Identity;
 @inject SignInManager<AppUser> SignInManager
 @inject UserManager<AppUser> UserManager
-@{
-    var user = await UserManager.GetUserAsync(User);
 
-}
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-10">
+            <h1>Free Smart Contracts</h1>
+            <ul class="list-group">
+                <li class="list-group-item mb-5 list-group-item-light" style="display:flex;">
+                    @if (SignInManager.IsSignedIn(User))
+                    {
+                        var user = await UserManager.GetUserAsync(User);
+                        if (user != null)
+                        {
+                            <a class="nav-link exercise-buttons px-4" asp-area="" asp-controller="Exercise" asp-action="CreateExercise">Create Smart Contract</a>
+                            <a class="nav-link exercise-buttons px-4" asp-route-creatorPublicKey="@user.Publickey" asp-controller="SmartContract" asp-action="GetFreesmartContracts">Free Smart Contracts</a>
 
-<ul class="list-group">
-
-    @foreach (var item in Model)
-    {
-        <li class="list-group-item list-group-item-light" style="display:flex; justify-content:space-between;">
-            <div>
-                @if(item.Exercise != null)
+                            <a class="nav-link exercise-buttons px-4" asp-route-creatorPublicKey="@user.Publickey" asp-controller="SmartContract" asp-action="MySmartContracts">Your Smart Contracts</a>
+                            <a class="nav-link exercise-buttons px-4" asp-route-executorPublicKey="@user.Publickey" asp-controller="SmartContract" asp-action="TasksCompletedByMe">Tasks Completed By Me</a>
+                        }
+                    }
+                </li>
+                @foreach (var item in Model)
                 {
-                    <h3>@item.Exercise.Name</h3>
+                    <li class=" p-3 mb-3 list-group-item list-group-item-light" style="display:flex; justify-content:space-between;">
+                        <div>
+                            @if (item.Exercise != null)
+                            {
+                                <h3>@item.Exercise.Name</h3>
+                            }
+                            <h4>@item.ContractValue Coins</h4>
+                        </div>
+                        <div class="align-items-center">
+                            <a asp-action="Details" asp-controller="SmartContract" asp-route-idSmartContract="@item.ContractId" class="btn btn-custom btn-lg w-20" role="button">Details</a>
+                        </div>
+                    </li>
                 }
-                <h4>@item.ContractValue Coins</h4>
-            </div>
-            <div class="align-items-center">
-                <a asp-action="Details" asp-controller="SmartContract" asp-route-idSmartContract="@item.ContractId" class="btn btn-info btn-lg w-20" style="margin-top:17%;" role="button">Details</a>
-            </div>
+            </ul>
+        </div>
+    </div>
+</div>
+<style>
 
-        </li>
+
+    h1 {
+        color: #fc81cd;
+        font-weight: bold;
+        margin-bottom: 30px;
     }
-</ul>
+
+    h3 {
+        color: #343a40;
+    }
+
+    h4 {
+        color: #6c757d;
+    }
+
+    .exercise-buttons {
+        margin-right: 10px;
+        border-radius: 5px;
+        background-color: #ffd1e5;
+        border-color: #ffd1e5;
+        color: #343a40;
+    }
+
+    .exercise-buttons:hover {
+        background-color: #ffc1d9;
+        border-color: #ffc1d9;
+    }
+
+    .list-group-item {
+        background-color: #ffffff;
+        border: 1px solid #fc81cd;
+        margin-bottom: 10px;
+        border-radius: 10px;
+    }
+
+    .btn-custom {
+        background-color: #ffd1e5;
+        border-color: #ffd1e5;
+        color: #343a40;
+    }
+
+    .btn-custom:hover {
+        background-color: #ffc1d9;
+        border-color: #ffc1d9;
+    }
+
+    .btn-lg {
+        padding: 10px 20px;
+        font-size: 1.2rem;
+        border-radius: 5px;
+    }
+</style>

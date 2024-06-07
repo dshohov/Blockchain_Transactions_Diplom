@@ -23,7 +23,7 @@ namespace Blockchain_Transactions_Diplom.Controllers
         public async Task<IActionResult> CreateSmartContractAsync(SmartContractCreateViewModel smartContractCreateViewModel)
         {
             if (await _smartContractService.AddSmartContactAsync(smartContractCreateViewModel))
-                return RedirectToAction("Index");
+                return RedirectToAction("GetFreeSmartContracts");
             return RedirectToAction("Error", "Home");
         }
         [HttpGet]
@@ -67,9 +67,9 @@ namespace Blockchain_Transactions_Diplom.Controllers
             return RedirectToAction("Error", "Home");
         }
         [HttpGet]
-        public IActionResult SendReplyToExecutor(string idExericse)
+        public IActionResult SendReplyToExecutor(string idExercіse)
         {
-            return View(new ExerciseCreatorSendAnswerViewModel() { IdExercise = idExericse });
+            return View(new ExerciseCreatorSendAnswerViewModel() { IdExercise = idExercіse });
         }
         [HttpPost]
         public async Task<IActionResult> SendReplyToExecutor(ExerciseCreatorSendAnswerViewModel exerciseCreatorSendAnswerViewModel)

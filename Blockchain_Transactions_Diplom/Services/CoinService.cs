@@ -192,17 +192,21 @@ namespace Blockchain_Transactions_Diplom.Services
                         if (user.Balance >= soldCoinsViewModel.CountCoins)
                         {
                             var superAdminKeys = await GetUserKeyPairSuperAdminAsync();
-                            var transaction = new TransactionCreateViewModel()
+                            if(superAdminKeys != null)
                             {
-                                FromPublicKey = user.Publickey,
-                                FromPrivateKey = user.PrivateKey,
-                                ToPublicKey = superAdminKeys.Publickey,
-                                Amount = (ulong)soldCoinsViewModel.CountCoins
-                            };
-                            if (await SoldCoinTransactionAsync(transaction))
-                            {
-                                return true;
+                                var transaction = new TransactionCreateViewModel()
+                                {
+                                    FromPublicKey = user.Publickey,
+                                    FromPrivateKey = user.PrivateKey,
+                                    ToPublicKey = superAdminKeys.Publickey,
+                                    Amount = (ulong)soldCoinsViewModel.CountCoins
+                                };
+                                if (await SoldCoinTransactionAsync(transaction))
+                                {
+                                    return true;
+                                }
                             }
+                            
                         }
                     }
                     
@@ -223,17 +227,21 @@ namespace Blockchain_Transactions_Diplom.Services
                     if (user.Balance >= amounCoins)
                     {
                         var superAdminKeys = await GetUserKeyPairSuperAdminAsync();
-                        var transaction = new TransactionCreateViewModel()
+                        if(superAdminKeys != null)
                         {
-                            FromPublicKey = user.Publickey,
-                            FromPrivateKey = user.PrivateKey,
-                            ToPublicKey = superAdminKeys.Publickey,
-                            Amount = (ulong)amounCoins
-                        };
-                        if (await SoldCoinTransactionAsync(transaction))
-                        {
-                            return true;
+                            var transaction = new TransactionCreateViewModel()
+                            {
+                                FromPublicKey = user.Publickey,
+                                FromPrivateKey = user.PrivateKey,
+                                ToPublicKey = superAdminKeys.Publickey,
+                                Amount = (ulong)amounCoins
+                            };
+                            if (await SoldCoinTransactionAsync(transaction))
+                            {
+                                return true;
+                            }
                         }
+                       
                     }
                 }
                

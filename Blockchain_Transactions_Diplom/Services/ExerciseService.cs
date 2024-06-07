@@ -24,8 +24,8 @@ namespace Blockchain_Transactions_Diplom.Services
             {
                 Id = sha256(exerciseCreateViewModel.Name + exerciseCreateViewModel.Description),
                 Name = exerciseCreateViewModel.Name,
-                Description = exerciseCreateViewModel.Description,                
-                UserId = _httpContextAccessor.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier)?.Value
+                Description = exerciseCreateViewModel.Description,
+                UserId = _httpContextAccessor.HttpContext != null ? _httpContextAccessor.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier)?.Value : ""
             };
             if (exerciseCreateViewModel.File != null)
             {

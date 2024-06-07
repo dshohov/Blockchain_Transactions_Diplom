@@ -75,6 +75,10 @@ namespace Blockchain_Transactions_Diplom
                 app.UseHsts();
             }
 
+            //For realease
+            app.UseExceptionHandler("/Home/Error");
+            app.UseHsts();
+
             app.UseHttpsRedirection();
             app.UseStaticFiles();
 

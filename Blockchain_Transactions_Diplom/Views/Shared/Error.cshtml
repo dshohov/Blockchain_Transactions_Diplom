@@ -3,7 +3,7 @@
     ViewData["Title"] = "Error";
 }
 
-<h1 class="text-danger">Error.</h1>
+@*<h1 class="text-danger">Error.</h1>
 <h2 class="text-danger">An error occurred while processing your request.</h2>
 
 @if (Model.ShowRequestId)
@@ -22,4 +22,61 @@
     It can result in displaying sensitive information from exceptions to end users.
     For local debugging, enable the <strong>Development</strong> environment by setting the <strong>ASPNETCORE_ENVIRONMENT</strong> environment variable to <strong>Development</strong>
     and restarting the app.
-</p>
+</p>*@
+
+<div class="error-container">
+    <h1 class="error-title">Oops!</h1>
+    <p class="error-message">Something went wrong.</p>
+    <p class="error-details">An unexpected error has occurred. Please try again later.</p>
+    <a href="/" class="btn btn-primary">Go to Homepage</a>
+</div>
+
+
+<style>
+    body {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        background-color: #f8f9fa;
+        font-family: Arial, sans-serif;
+    }
+
+    .error-container {
+        text-align: center;
+        background: #fff;
+        padding: 40px;
+        border-radius: 10px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .error-title {
+        font-size: 48px;
+        color: #fc81cd;
+        font-weight: bold;
+        margin-bottom: 20px;
+    }
+
+    .error-message {
+        font-size: 24px;
+        color: #343a40;
+        margin-bottom: 20px;
+    }
+
+    .error-details {
+        font-size: 18px;
+        color: #6c757d;
+        margin-bottom: 30px;
+    }
+
+    .btn-primary {
+        background-color: #ffd1e5;
+        border-color: #ffd1e5;
+        color: #343a40;
+    }
+
+    .btn-primary:hover {
+        background-color: #ffc1d9;
+        border-color: #ffc1d9;
+    }
+</style>

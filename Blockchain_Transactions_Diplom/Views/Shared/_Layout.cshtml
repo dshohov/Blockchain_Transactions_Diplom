@@ -26,9 +26,9 @@
 
                 <ul class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
                     <li><a style="color:#fc81cd; border-color:#fc81cd; margin-left:10px;" class="btn btn-otline nav-link px-2 link-secondary" asp-area="" asp-controller="Coin" asp-action="CreateTransaction">Create Transaction</a></li>
-                    <li><a style="color:#fc81cd; border-color:#fc81cd;margin-left:10px;" class="btn btn-otline  nav-link px-2 link-secondary" asp-area="" asp-controller="SmartContract" asp-action="GetFreesmartContracts">Exercise</a></li>
-                    <li><a style="color:#fc81cd; border-color:#fc81cd;margin-left:10px;" href="#" class="btn btn-otline nav-link px-2 link-secondary">About</a></li>
-                    <li><a style="color:#fc81cd; border-color:#fc81cd;margin-left:10px;" href="#" class="btn btn-otline nav-link px-2 link-body-emphasis">Contacts</a></li>
+                    <li><a style="color:#fc81cd; border-color:#fc81cd;margin-left:10px;" class="btn btn-otline  nav-link px-2 link-secondary" asp-area="" asp-controller="SmartContract" asp-action="GetFreesmartContracts">Smart Contracts</a></li>
+                    <li><a style="color:#fc81cd; border-color:#fc81cd;margin-left:10px;"  asp-controller="Home" asp-action="About" class="btn btn-otline nav-link px-2 link-secondary">About</a></li>
+                    <li><a style="color:#fc81cd; border-color:#fc81cd;margin-left:10px;" asp-controller="Home" asp-action="Contact" class="btn btn-otline nav-link px-2 link-body-emphasis">Contacts</a></li>
                 </ul>
                 @if (SignInManager.IsSignedIn(User))
                 {
