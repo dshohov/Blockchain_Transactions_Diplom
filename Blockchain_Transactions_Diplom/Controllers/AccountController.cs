@@ -88,7 +88,9 @@ namespace Blockchain_Transactions_Diplom.Controllers
         [HttpGet]
         public async Task<IActionResult> Register(string? returnUrl = null)
         {
+#pragma warning disable CS8604 // Возможно, аргумент-ссылка, допускающий значение NULL.
             var registerViewModel = await _accountService.GetRegisterAsync(returnUrl);
+#pragma warning restore CS8604 // Возможно, аргумент-ссылка, допускающий значение NULL.
             return View(registerViewModel);
         }
         [HttpGet]
@@ -108,7 +110,9 @@ namespace Blockchain_Transactions_Diplom.Controllers
                     return LocalRedirect(returnUrl);
                 ModelState.AddModelError("Password", "User could not be created. Password not unique enough ");
             }
-            return View(_accountService.FailRegisterAsync(registerViewModel));
+#pragma warning disable CS8604 // Возможно, аргумент-ссылка, допускающий значение NULL.
+            return View( _accountService.FailRegisterAsync(registerViewModel));
+#pragma warning restore CS8604 // Возможно, аргумент-ссылка, допускающий значение NULL.
         }
 
         [HttpGet]

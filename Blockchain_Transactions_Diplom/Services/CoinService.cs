@@ -3,6 +3,7 @@ using Blockchain_Transactions_Diplom.IServices;
 using Blockchain_Transactions_Diplom.Models;
 using Blockchain_Transactions_Diplom.ViewModels;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Microsoft.IdentityModel.Tokens;
 
 namespace Blockchain_Transactions_Diplom.Services
@@ -30,8 +31,9 @@ namespace Blockchain_Transactions_Diplom.Services
                 var superAdmins = await _userManager.GetUsersInRoleAsync("SuperAdmin");
                 var superAdmin = superAdmins.FirstOrDefault();
                 if (superAdmin != null)
-                {
-                    return new KeyPair(superAdmin.Publickey, superAdmin.PrivateKey);
+                {                    
+                    if(superAdmin.Publickey != null && superAdmin.PrivateKey != null)
+                        return new KeyPair(superAdmin.Publickey, superAdmin.PrivateKey);
                 }
             }
             return null;
@@ -39,90 +41,114 @@ namespace Blockchain_Transactions_Diplom.Services
 
         public async Task<bool> CreateTransactionAsync(TransactionCreateViewModel transactionCreateViewModel)
         {
-            var fromKeys = new KeyPair(transactionCreateViewModel.FromPublicKey, transactionCreateViewModel.FromPrivateKey);
-            var comision = transactionCreateViewModel.Amount * 0.05;
-            if (comision == transactionCreateViewModel.Amount)
-                comision = 1;
-            transactionCreateViewModel.Amount -= (ulong)comision;
-            if (await Task.Run(() => _coinApp.PerformTransaction(fromKeys, transactionCreateViewModel.ToPublicKey, transactionCreateViewModel.Amount)))
+            if(transactionCreateViewModel.FromPrivateKey != null && transactionCreateViewModel.FromPublicKey != null)
             {
-                using (var scope = _serviceProvider.CreateScope())
+                var fromKeys = new KeyPair(transactionCreateViewModel.FromPublicKey, transactionCreateViewModel.FromPrivateKey);
+                var comision = transactionCreateViewModel.Amount * 0.05;
+                if (comision == transactionCreateViewModel.Amount)
+                    comision = 1;
+                transactionCreateViewModel.Amount -= (ulong)comision;
+                if(transactionCreateViewModel.ToPublicKey != null)
                 {
-                    var superAdminKeys = await GetUserKeyPairSuperAdminAsync();
-                    if(superAdminKeys != null)
+                    if (await Task.Run(() => _coinApp.PerformTransaction(fromKeys, transactionCreateViewModel.ToPublicKey, transactionCreateViewModel.Amount)))
                     {
-                        await Task.Run(() => _coinApp.PerformTransaction(fromKeys, superAdminKeys.Publickey, (ulong)comision));
-
-                        var _userManager = scope.ServiceProvider.GetRequiredService<UserManager<AppUser>>();
-                        var usersList = await _userManager.GetUsersInRoleAsync("User");
-                        var userFrom = usersList.FirstOrDefault(x => x.Publickey == transactionCreateViewModel.FromPublicKey);
-                        var userTo = usersList.FirstOrDefault(x => x.Publickey == transactionCreateViewModel.ToPublicKey);
-                        if (userFrom != null && userTo != null)
+                        using (var scope = _serviceProvider.CreateScope())
                         {
-                            userFrom.Balance -= transactionCreateViewModel.Amount;
-                            userTo.Balance += transactionCreateViewModel.Amount;
-                            await _userManager.UpdateAsync(userFrom);
-                            await _userManager.UpdateAsync(userTo);
-                        }
+                            var superAdminKeys = await GetUserKeyPairSuperAdminAsync();
+                            if (superAdminKeys != null)
+                            {
+                                await Task.Run(() => _coinApp.PerformTransaction(fromKeys, superAdminKeys.Publickey, (ulong)comision));
 
+                                var _userManager = scope.ServiceProvider.GetRequiredService<UserManager<AppUser>>();
+                                var usersList = await _userManager.GetUsersInRoleAsync("User");
+                                var userFrom = usersList.FirstOrDefault(x => x.Publickey == transactionCreateViewModel.FromPublicKey);
+                                var userTo = usersList.FirstOrDefault(x => x.Publickey == transactionCreateViewModel.ToPublicKey);
+                                if (userFrom != null && userTo != null)
+                                {
+                                    userFrom.Balance -= transactionCreateViewModel.Amount;
+                                    userTo.Balance += transactionCreateViewModel.Amount;
+                                    await _userManager.UpdateAsync(userFrom);
+                                    await _userManager.UpdateAsync(userTo);
+                                }
+
+                            }
+                        }
+                        return true;
                     }
                 }
-                return true;
+                
+
             }
-               
+
             return false;
         }
         public async Task<bool> SoldCoinTransactionAsync(TransactionCreateViewModel transactionCreateViewModel)
         {
-            var fromKeys = new KeyPair(transactionCreateViewModel.FromPublicKey, transactionCreateViewModel.FromPrivateKey);
-            if (await Task.Run(() => _coinApp.PerformTransaction(fromKeys, transactionCreateViewModel.ToPublicKey, transactionCreateViewModel.Amount)))
+            if(transactionCreateViewModel.FromPublicKey != null && transactionCreateViewModel.FromPrivateKey != null)
             {
-                using (var scope = _serviceProvider.CreateScope())
+                var fromKeys = new KeyPair(transactionCreateViewModel.FromPublicKey, transactionCreateViewModel.FromPrivateKey);
+                if(transactionCreateViewModel.ToPublicKey != null)                
                 {
-                    var _userManager = scope.ServiceProvider.GetRequiredService<UserManager<AppUser>>();
-                    var usersList = await _userManager.GetUsersInRoleAsync("User");
-                    var userFrom = usersList.FirstOrDefault(x => x.Publickey == transactionCreateViewModel.FromPublicKey);     
-                    if(userFrom != null)
+                    if (await Task.Run(() => _coinApp.PerformTransaction(fromKeys, transactionCreateViewModel.ToPublicKey, transactionCreateViewModel.Amount)))
                     {
-                        userFrom.Balance -= transactionCreateViewModel.Amount;
-                        await _userManager.UpdateAsync(userFrom);
+                        using (var scope = _serviceProvider.CreateScope())
+                        {
+                            var _userManager = scope.ServiceProvider.GetRequiredService<UserManager<AppUser>>();
+                            var usersList = await _userManager.GetUsersInRoleAsync("User");
+                            var userFrom = usersList.FirstOrDefault(x => x.Publickey == transactionCreateViewModel.FromPublicKey);
+                            if (userFrom != null)
+                            {
+                                userFrom.Balance -= transactionCreateViewModel.Amount;
+                                await _userManager.UpdateAsync(userFrom);
+                            }
+
+                        }
+                        return true;
                     }
-                    
                 }
-                return true;
+                
             }
+            
 
             return false;
         }
         public async Task<bool> SuperAdminCreateTransactionAsync(string publicKeyUser, ulong amount)
         {
             var keys = await GetUserKeyPairSuperAdminAsync();
-            if (_coinApp.PerformSuperAdminTransaction(keys, publicKeyUser, amount))
+            if(keys != null)
             {
-                using (var scope = _serviceProvider.CreateScope())
+                if (_coinApp.PerformSuperAdminTransaction(keys, publicKeyUser, amount))
                 {
-                    var _userManager = scope.ServiceProvider.GetRequiredService<UserManager<AppUser>>();
-                    var usersList = await _userManager.GetUsersInRoleAsync("User");
-                    var userTo = usersList.FirstOrDefault(x => x.Publickey == publicKeyUser);
-                    if(userTo != null)
+                    using (var scope = _serviceProvider.CreateScope())
                     {
-                        userTo.Balance += amount;
-                        await _userManager.UpdateAsync(userTo);
-                    }
-                   
+                        var _userManager = scope.ServiceProvider.GetRequiredService<UserManager<AppUser>>();
+                        var usersList = await _userManager.GetUsersInRoleAsync("User");
+                        var userTo = usersList.FirstOrDefault(x => x.Publickey == publicKeyUser);
+                        if (userTo != null)
+                        {
+                            userTo.Balance += amount;
+                            await _userManager.UpdateAsync(userTo);
+                        }
 
+
+                    }
+                    return true;
                 }
-                return true;
             }
+            
             return false;
         }
         public async Task<bool> SuperAdminCreateTransactionForRecoveryAsync(string publicKeyUser, ulong amount)
         {
             var keys = await GetUserKeyPairSuperAdminAsync();
-            if (await Task.Run(() => _coinApp.PerformSuperAdminTransaction(keys, publicKeyUser, amount)))
-            {                
-                return true;
+            if(keys != null)
+            {
+                if (await Task.Run(() => _coinApp.PerformSuperAdminTransaction(keys, publicKeyUser, amount)))
+                {
+                    return true;
+                }
             }
+            
             return false;
         }
 
@@ -138,10 +164,14 @@ namespace Blockchain_Transactions_Diplom.Services
                 var orderId = sha256.GetHash(idUser + "#" + countCoins);
                 if(user != null)
                 {
-                    await _liqPay.SendInvoiceAsync(user.Email, countCoins, orderId);
-                    user.LastOrderId = orderId;
-                    user.LastCoinBuyCount = (ulong)countCoins;
-                    await _userManager.UpdateAsync(user);
+                    if(user.Email != null)
+                    {
+                        await _liqPay.SendInvoiceAsync(user.Email, countCoins, orderId);
+                        user.LastOrderId = orderId;
+                        user.LastCoinBuyCount = (ulong)countCoins;
+                        await _userManager.UpdateAsync(user);
+                    }
+                   
                 }
                 
             }           

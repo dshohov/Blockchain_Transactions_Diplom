@@ -44,10 +44,13 @@ namespace Blockchain_Transactions_Diplom.Services
 
         public async Task<bool> AddExecutorInSmartContractAsync(SmartContractAddExecutor smartContractAddExecutor)
         {
-            var smartContract = await _smartContractRepository.GetSmartContractAsync(smartContractAddExecutor.ContractId);
-            smartContract.PublicKeyExecutor = smartContractAddExecutor.PublicKeyExecutor;
-            if (await _smartContractRepository.UpdateStateSmartContractAsync(smartContract))
-                return true;
+            if(smartContractAddExecutor.ContractId != null)
+            {
+                var smartContract = await _smartContractRepository.GetSmartContractAsync(smartContractAddExecutor.ContractId);
+                smartContract.PublicKeyExecutor = smartContractAddExecutor.PublicKeyExecutor;
+                if (await _smartContractRepository.UpdateStateSmartContractAsync(smartContract))
+                    return true;
+            }            
             return false;
         }
         
@@ -56,7 +59,10 @@ namespace Blockchain_Transactions_Diplom.Services
             var smartContracts = await _smartContractRepository.GetFreeSmartContractsAsync();
             foreach(var smartContract in smartContracts.ToList())
             {
-                smartContract.Exercise = await _exerciseRepository.GetExerciseAsync(smartContract.IdExercise);
+                if(smartContract.IdExercise != null)
+                {
+                    smartContract.Exercise = await _exerciseRepository.GetExerciseAsync(smartContract.IdExercise);
+                }
             }
             return smartContracts;
         }
@@ -64,8 +70,11 @@ namespace Blockchain_Transactions_Diplom.Services
         public async Task<SmartContract> GetSmartContractWithExerciseByIdAsync(string contractId)
         {
             var smartContract = await _smartContractRepository.GetSmartContractAsync(contractId);
-            smartContract.Exercise = await _exerciseRepository.GetExerciseAsync(smartContract.IdExercise);
+            if(smartContract.IdExercise != null)
+                smartContract.Exercise = await _exerciseRepository.GetExerciseAsync(smartContract.IdExercise);
+            
             return smartContract;
+
 
         }
         public async Task<bool> AcceptSmartContractAsync( string userPublicKey, string smartContractId)
@@ -80,8 +89,8 @@ namespace Blockchain_Transactions_Diplom.Services
             var smartContracts = await _smartContractRepository.GetSmartContractsByUserPublicKeyAsync(creatorPublicKey);
             foreach(var smartContract in smartContracts.ToList())
             {
-                
-                smartContract.Exercise = await _exerciseRepository.GetExerciseAsync(smartContract.IdExercise);
+                if(smartContract.IdExercise != null)
+                    smartContract.Exercise = await _exerciseRepository.GetExerciseAsync(smartContract.IdExercise);
             }
             return smartContracts;
         }
@@ -90,35 +99,42 @@ namespace Blockchain_Transactions_Diplom.Services
             var smartContracts = await _smartContractRepository.GetTasksCompletedByMeAsync(executorPublicKey);
             foreach (var smartContract in smartContracts.ToList())
             {
-
-                smartContract.Exercise = await _exerciseRepository.GetExerciseAsync(smartContract.IdExercise);
+                if(smartContract.IdExercise != null)
+                    smartContract.Exercise = await _exerciseRepository.GetExerciseAsync(smartContract.IdExercise);
             }
             return smartContracts;
         }
         public async Task<bool> ExecutorSendAnsewrAsync(ExerciseExecutorSendAnswerViewModel exerciseExecutorSendAnswerViewModel)
         {
-            var exercise = await _exerciseRepository.GetExerciseAsync(exerciseExecutorSendAnswerViewModel.IdExercise);
-            exercise.AnswerExecutor = exerciseExecutorSendAnswerViewModel.AnswerExecutor;
-            if (exerciseExecutorSendAnswerViewModel.File != null)
+            if(exerciseExecutorSendAnswerViewModel.IdExercise != null)
             {
-                using (var memoryStream = new MemoryStream())
+                var exercise = await _exerciseRepository.GetExerciseAsync(exerciseExecutorSendAnswerViewModel.IdExercise);
+                exercise.AnswerExecutor = exerciseExecutorSendAnswerViewModel.AnswerExecutor;
+                if (exerciseExecutorSendAnswerViewModel.File != null)
                 {
-                    await exerciseExecutorSendAnswerViewModel.File.CopyToAsync(memoryStream);
-                    exercise.FileNameAnswer = exerciseExecutorSendAnswerViewModel.File.FileName;
-                    exercise.FileAnswer = memoryStream.ToArray();
+                    using (var memoryStream = new MemoryStream())
+                    {
+                        await exerciseExecutorSendAnswerViewModel.File.CopyToAsync(memoryStream);
+                        exercise.FileNameAnswer = exerciseExecutorSendAnswerViewModel.File.FileName;
+                        exercise.FileAnswer = memoryStream.ToArray();
+                    }
                 }
-            }
-            if (await _exerciseRepository.UpdateExerciseAsync(exercise))
-                return true;
+                if (await _exerciseRepository.UpdateExerciseAsync(exercise))
+                    return true;
+            }            
             return false;
         }
 
         public async Task<bool> CreatorSendAnsewrAsync(ExerciseCreatorSendAnswerViewModel exerciseCreatorSendAnswerViewModel)
         {
-            var exercise = await _exerciseRepository.GetExerciseAsync(exerciseCreatorSendAnswerViewModel.IdExercise);
-            exercise.AnswerCreator = exerciseCreatorSendAnswerViewModel.AnwerCreator;           
-            if (await _exerciseRepository.UpdateExerciseAsync(exercise))
-                return true;
+            if(exerciseCreatorSendAnswerViewModel.IdExercise != null)
+            {
+                var exercise = await _exerciseRepository.GetExerciseAsync(exerciseCreatorSendAnswerViewModel.IdExercise);
+                exercise.AnswerCreator = exerciseCreatorSendAnswerViewModel.AnwerCreator;
+                if (await _exerciseRepository.UpdateExerciseAsync(exercise))
+                    return true;
+            }
+            
             return false;
         }
 

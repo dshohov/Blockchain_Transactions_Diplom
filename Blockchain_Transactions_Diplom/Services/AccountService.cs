@@ -48,8 +48,12 @@ namespace Blockchain_Transactions_Diplom.Services
             var user = await _userManager.FindByEmailAsync(resetPasswordViewModel.Email);
             if(user != null)
             {
-                var result = await _userManager.ResetPasswordAsync(user, resetPasswordViewModel.Code, resetPasswordViewModel.Password);
-                return result;
+                if (resetPasswordViewModel.Code != null)
+                {
+                    var result = await _userManager.ResetPasswordAsync(user, resetPasswordViewModel.Code, resetPasswordViewModel.Password);
+                    return result;
+                }
+                
             }
             throw new ArgumentNullException();
         }

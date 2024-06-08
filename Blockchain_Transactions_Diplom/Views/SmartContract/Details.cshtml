@@ -10,16 +10,23 @@
                 <h1>@Model.Exercise.Name</h1>
                 <h2>@Model.ContractValue Coins</h2>
                 <h3>@Model.Exercise.Description</h3>
-                <a asp-action="DownloadFile" asp-controller="Exercise" asp-route-id="@Model.IdExercise" class="btn btn-primary mb-3">Download File</a>
+                @if(Model.Exercise.FileName != null)
+                {
+                    <a asp-action="DownloadFile" asp-controller="Exercise" asp-route-id="@Model.IdExercise" class="btn btn-primary mb-3">Download File</a>
+                }
 
                 @if (SignInManager.IsSignedIn(User))
                 {
                     var user = await UserManager.GetUserAsync(User);
                     if (user != null)
                     {
-                        <div>
-                            <a asp-action="AcceptSmartContract" asp-controller="SmartContract" asp-route-idSmartContract="@Model.ContractId" asp-route-userPublicKey="@user.Publickey" class="btn btn-primary mb-3">Accept Contract</a>
-                        </div>
+                        @if(Model.PublicKeyExecutor == null)
+                        {
+                            <div>
+                                <a asp-action="AcceptSmartContract" asp-controller="SmartContract" asp-route-idSmartContract="@Model.ContractId" asp-route-userPublicKey="@user.Publickey" class="btn btn-primary mb-3">Accept Contract</a>
+                            </div>
+                        }
+                        
                         if (Model.PublicKeyExecutor == user.Publickey)
                         {
                             <div class="answer">
@@ -72,11 +79,7 @@
 
 
 <style>
-    body {
-        font-family: Arial, sans-serif;
-        background-color: #f8f9fa;
-        padding: 50px;
-    }
+
 
     .container {
         background: #fff;
