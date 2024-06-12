@@ -3,9 +3,7 @@ using Blockchain_Transactions_Diplom.Interfaces;
 using Blockchain_Transactions_Diplom.IServices;
 using System.Text.RegularExpressions;
 using Blockchain_Transactions_Diplom.ViewModels;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using Blockchain_Transactions_Diplom.Models;
-using System.Security.Claims;
 
 namespace Blockchain_Transactions_Diplom.Services
 {
@@ -15,28 +13,18 @@ namespace Blockchain_Transactions_Diplom.Services
         private readonly SignInManager<AppUser> _signInManager;
         private readonly IPostmarkEmail _sendGridEmail;
         private readonly RoleManager<IdentityRole> _roleManager;
-        private readonly RSAEncryptor _encryptor;
-        public AccountService(UserManager<AppUser> userManager, SignInManager<AppUser> signInManager, IPostmarkEmail sendGridEmail, RoleManager<IdentityRole> roleManager)
+        private readonly ICoinService _coinService;
+       
+        public AccountService(UserManager<AppUser> userManager, SignInManager<AppUser> signInManager, IPostmarkEmail sendGridEmail, RoleManager<IdentityRole> roleManager, ICoinService coinService)
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _sendGridEmail = sendGridEmail;
             _roleManager = roleManager;
-            _encryptor = new RSAEncryptor();
+            _coinService = coinService;
         }
         
-        public async Task<AccountInfoViewModel> GetUserInfoAsync(ClaimsPrincipal ActuelUser)
-        {
-            AppUser user = await _userManager.GetUserAsync(ActuelUser);
-            var userInfo = new AccountInfoViewModel()
-            {
-                FirstName = user.FirstName,
-                LastName = user.LastName,
-                Publickey = user.Publickey,
-                PrivateKey = user.PrivateKey
-            };
-            return  userInfo;
-        }
+       
         public string GetResetPassword(string currentUrl)
         {            
             string userId="";
@@ -56,16 +44,21 @@ namespace Blockchain_Transactions_Diplom.Services
 
         public async Task<IdentityResult> PostResetPasswordAsync(ResetPasswordViewModel resetPasswordViewModel)
         {
+            
             var user = await _userManager.FindByEmailAsync(resetPasswordViewModel.Email);
             if(user != null)
             {
-                var result = await _userManager.ResetPasswordAsync(user, resetPasswordViewModel.Code, resetPasswordViewModel.Password);
-                return result;
+                if (resetPasswordViewModel.Code != null)
+                {
+                    var result = await _userManager.ResetPasswordAsync(user, resetPasswordViewModel.Code, resetPasswordViewModel.Password);
+                    return result;
+                }
+                
             }
             throw new ArgumentNullException();
         }
 
-        public async Task<SignInResult> PostLogin(LoginViewModel loginViewModel)
+        public async Task<SignInResult> PostLoginAsync(LoginViewModel loginViewModel)
         {
             var user = await _userManager.FindByEmailAsync(loginViewModel.UserEmail);
 
@@ -103,25 +96,31 @@ namespace Blockchain_Transactions_Diplom.Services
             
             return registerViewModel;
         }
-        public async Task<RegisterViewModel> FailRegister(RegisterViewModel registerViewModel)
+        public RegisterViewModel FailRegisterAsync(RegisterViewModel registerViewModel)
         {
             return registerViewModel;
         }
 
         public async Task<bool> PostRegisterAsync(RegisterViewModel registerViewModel)
         {
-            var keys = _encryptor.GenerateKeys();
+            ulong firstBalance = 50;
+            var keys = _coinService.GenerateKeyPair();
             var user = new AppUser { Email = registerViewModel.Email, 
                                      FirstName = registerViewModel.FirstName, 
                                      LastName = registerViewModel.LastName, 
                                      UserName = registerViewModel.Email,
                                      Publickey = keys.Publickey,
-                                     PrivateKey = keys.PrivateKey
+                                     PrivateKey = keys.PrivateKey,
+                                     Balance = firstBalance
             };
             var result = await _userManager.CreateAsync(user, registerViewModel.Password);
             await _userManager.AddToRoleAsync(user, "User");
             if (result.Succeeded)
+            {
+                await _coinService.SuperAdminCreateTransactionAsync(user.Publickey, firstBalance);
                 return true;
+            }
+                
             return false;
         }
 
@@ -132,7 +131,7 @@ namespace Blockchain_Transactions_Diplom.Services
 
         public async Task PostForgotPasswordAsync(ForgotPasswordViewModel model,string callbackurl)
         {
-            await _sendGridEmail.SendEmailAsync(model.Email, "Reset Email Confirmation", "Please reset email by going to this " +
+            await _sendGridEmail.SendEmailAsync(model.Email, "Reset Password Confirmation", "Please reset password by going to this " +
                     "<a href=\"" + callbackurl + "\">link</a>");
         }
 

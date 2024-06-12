@@ -1,0 +1,86 @@
+﻿@using Blockchain_Transactions_Diplom.ViewModels
+@model CoinBuyCoinViewModel
+@using Microsoft.AspNetCore.Identity
+@inject SignInManager<AppUser> SignInManager
+@inject UserManager<AppUser> UserManager
+
+@if (SignInManager.IsSignedIn(User))
+{
+    var user = await UserManager.GetUserAsync(User);
+    if(user != null)
+    {
+        <main class="form-buy-container d-flex align-items-center justify-content-center">
+
+            <form class="form-buy w-50 p-4 bg-light rounded shadow" asp-controller="Coin" asp-action="BuyCoin" method="post" role="form">
+                <h1 class="h3 mb-3 fw-normal text-center">Buy Coin</h1>
+
+                <div class="form-floating mb-3">
+                    <input asp-for="UserId" type="text" value="@user.Id" readonly hidden class="form-control" placeholder="" required="" name="UserId">
+                    <label asp-for="UserId" for="floatingUserId">User Id</label>
+                </div>
+                <div class="form-floating mb-1">
+                    <input asp-for="CountCoin" type="number" class="form-control" id="floatingCountCoin" placeholder="CountCoin" required="">
+                    <label asp-for="CountCoin" for="floatingCountCoin">CountCoin</label>
+                </div>
+
+                <button class="btn btn-success w-100 py-2" type="submit">Buy Coin</button>
+
+            </form>
+        </main>
+    }
+    
+}
+
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        background-color: #f8f9fa;
+    }
+
+    .form-buy-container {
+        min-height: calc(100vh - 200px); 
+        padding-top: 60px; 
+        padding-bottom: 60px; 
+    }
+
+    .form-buy {
+        max-width: 400px;
+        margin: auto;
+    }
+
+    .form-buy .form-floating {
+        margin-bottom: 15px;
+    }
+
+    .form-buy .form-floating input:focus {
+        border-color: #fc81cd;
+        box-shadow: 0 0 0 0.25rem rgba(252, 129, 205, 0.25);
+    }
+
+    .form-buy .form-floating input {
+        border-radius: 0.25rem;
+    }
+
+    .form-buy .btn-success {
+        background-color: #fc81cd;
+        border-color: #fc81cd;
+    }
+
+    .form-buy .btn-success:hover {
+        background-color: #e170b6;
+        border-color: #e170b6;
+    }
+
+    .form-buy .bg-light {
+        background-color: #ffffff !important;
+    }
+
+    .form-buy .shadow {
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .form-buy .rounded {
+        border-radius: 10px;
+    }
+
+</style>

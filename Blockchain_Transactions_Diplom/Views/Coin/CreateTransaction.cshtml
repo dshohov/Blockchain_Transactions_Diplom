@@ -1,0 +1,118 @@
+﻿@using Blockchain_Transactions_Diplom.ViewModels
+@using Microsoft.AspNetCore.Identity
+@inject SignInManager<AppUser> SignInManager
+@inject UserManager<AppUser> UserManager
+@model TransactionCreateViewModel
+
+
+@if (SignInManager.IsSignedIn(User))
+{
+    var user = await UserManager.GetUserAsync(User);
+    if(user != null)
+    {
+        <div class="transaction-create-container">
+            <h4 class="transaction-create-title">Create Transaction</h4>
+            <form asp-controller="Coin" asp-action="CreateTransactionT" method="post" class="transaction-create-form needs-validation" novalidate>
+                <div class="mb-3">
+                    <label for="FromPublicKey" class="form-label">Your Public Key</label>
+                    <input asp-for="FromPublicKey" style="background-color:white;" value="@user.Publickey" readonly type="text" class="form-control" required>
+                </div>
+                <div class="mb-3">
+                    <label for="FromPrivateKey" class="form-label">Your Private Key</label>
+                    <input asp-for="FromPrivateKey" type="text" class="form-control" required>
+                </div>
+                <div class="mb-3">
+                    <label for="ToPublicKey" class="form-label">To Public Key</label>
+                    <input asp-for="ToPublicKey" type="text" class="form-control" required>
+                </div>
+                <div class="mb-3">
+                    <label for="Amount" class="form-label">Amount</label>
+                    <input asp-for="Amount" type="number" class="form-control" min="0" max="@user.Balance" required oninput="calculateAmount(this.value, @user.Balance)">
+                </div>
+                <div id="transactionInfo" class="text-muted mb-3"></div>
+                <div id="recipientAmountInfo" class="text-muted"></div>
+                <div class="invalid-feedback">
+                    Your balance is @user.Balance!!!
+                </div>
+                <button type="submit" class="btn btn-primary btn-lg mt-2 w-100">Confirm!</button>
+            </form>
+        </div>
+    }
+    
+
+    <script>
+        function calculateAmount(amount, balance) {
+            if (!isNaN(amount) && amount >= 0 && amount <= balance) {
+                var fee = Math.round(amount * 0.05);
+                var recipientAmount = amount - fee;
+                var transactionInfo = document.getElementById("transactionInfo");
+                transactionInfo.innerHTML = "A 5% fee will be deducted from the transaction amount.";
+                var recipientAmountInfo = document.getElementById("recipientAmountInfo");
+                recipientAmountInfo.innerHTML = "Recipient will receive: " + recipientAmount;
+            } else {
+                var transactionInfo = document.getElementById("transactionInfo");
+                transactionInfo.innerHTML = "";
+                var recipientAmountInfo = document.getElementById("recipientAmountInfo");
+                recipientAmountInfo.innerHTML = "";
+            }
+        }
+    </script>
+}
+
+<style>
+    .transaction-create-container {
+        max-width: 500px;
+        margin: 0 auto;
+        padding: 20px;
+        background-color: #ffffff;
+        border-radius: 10px;
+        box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .transaction-create-title {
+        text-align: center;
+        margin-bottom: 20px;
+        color: #fc81cd;
+    }
+
+    .transaction-create-form {
+        text-align: left;
+    }
+
+    .form-label {
+        color: #6c757d;
+        font-weight: 600;
+    }
+
+    .form-control {
+        border: 2px solid #fc81cd;
+        border-radius: 5px;
+    }
+
+    .form-control:focus {
+        border-color: #fc81cd;
+        box-shadow: 0 0 0 0.2rem rgba(252, 129, 205, 0.25);
+    }
+
+    .btn-primary {
+        background-color: #fc81cd;
+        border-color: #fc81cd;
+    }
+
+    .btn-primary:hover {
+        background-color: #f961a4;
+        border-color: #f961a4;
+    }
+
+    .btn-primary:focus {
+        box-shadow: 0 0 0 0.2rem rgba(252, 129, 205, 0.25);
+    }
+
+    .text-muted {
+        color: #6c757d;
+    }
+
+    .invalid-feedback {
+        color: #dc3545;
+    }
+</style>

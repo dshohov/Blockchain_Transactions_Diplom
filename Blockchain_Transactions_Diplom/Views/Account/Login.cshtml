@@ -1,36 +1,83 @@
-﻿
-@model LoginViewModel
+﻿@model LoginViewModel
 @using Blockchain_Transactions_Diplom.ViewModels
-@using Microsoft.AspNetCore.Identity
-@using Blockchain_Transactions_Diplom.Models
-@inject SignInManager<AppUser> signInManager
 
-<main class="form-signin w-10 m-auto">
-    <form class="w-50" asp-controller="Account" asp-action="Login" asp-route-returnurl="@Model.ReturnUrl" method="post" role="form">
-        <h1 class="h3 mb-3 fw-normal">Please sign in</h1>
 
-        <div class="form-floating">
-            <input asp-for="UserEmail" type="email" class="form-control" id="floatingInput" placeholder="name@example.com">
+<main class="form-signin-container d-flex align-items-center justify-content-center">
+    <form class="form-signin w-50 p-4 bg-light rounded shadow" asp-controller="Account" asp-action="Login" asp-route-returnurl="@Model.ReturnUrl" method="post" role="form">
+        <h1 class="h3 mb-3 fw-normal text-center">Please sign in</h1>
+
+        <div class="form-floating mb-3">
+            <input asp-for="UserEmail" type="email" class="form-control" id="floatingInput" placeholder="name@example.com" required>
             <label asp-for="UserEmail" for="floatingInput">Email address</label>
         </div>
-        <div class="form-floating">
-            <input asp-for="Password" type="password" class="form-control" id="floatingPassword" placeholder="Password">
+        <div class="form-floating mb-1">
+            <input asp-for="Password" type="password" class="form-control" id="floatingPassword" placeholder="Password" required>
             <label asp-for="Password" for="floatingPassword">Password</label>
         </div>
-
-        <div class="form-check text-start my-3">
-            <input asp-for="RememberMe" class="form-check-input" type="checkbox" value="remember-me" id="flexCheckDefault">@Html.DisplayNameFor(m => m.RememberMe)
-            <label asp-for="RememberMe" class="form-check-label" for="flexCheckDefault">
-                Remember me
-            </label>
+        <div class="text-center mb-3">
+            <a style="color:lightgray; text-decoration:none;" class="btn " asp-action="ForgotPassword">Forgot your password?</a>
         </div>
-        <button class="btn btn-success w-25 py-2" type="submit">Sign in</button>
+        <button class="btn btn-success w-100 py-2" type="submit">Sign in</button>
 
-        <p class="mt-5">
-            <a class="btn btn-info" asp-action="Register"> Register as a new user?</a>
-        </p>
-        <p class="mt-1">
-            <a class="btn btn-outline-primary" asp-action="ForgotPassword"> Forgot your passowrd?</a>
-        </p>
+        <div class="mt-3 text-center">
+            <a type="button" style="color:#fc81cd; border-color:#fc81cd;" asp-action="Register" asp-controller="Account" class="btn btn-outline w-100 me-2">Register as a new user?</a>
+        </div>
+
     </form>
 </main>
+
+
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        background-color: #f8f9fa;
+    }
+
+    .form-signin-container {
+        min-height: calc(100vh - 200px); 
+        padding-top: 60px; 
+        padding-bottom: 60px; 
+    }
+
+    .form-signin {
+        max-width: 400px;
+        margin: auto;
+    }
+
+    .form-signin .form-floating {
+        margin-bottom: 15px;
+    }
+
+    .form-signin .form-floating input:focus {
+        border-color: #fc81cd;
+        box-shadow: 0 0 0 0.25rem rgba(252, 129, 205, 0.25);
+    }
+
+
+    .form-signin .form-floating input {
+        border-radius: 0.25rem;
+    }
+
+    .form-signin .btn-success {
+        background-color: #fc81cd;
+        border-color: #fc81cd;
+    }
+
+    .form-signin .btn-success:hover {
+        background-color: #e170b6;
+        border-color: #e170b6;
+    }
+
+    .form-signin .bg-light {
+        background-color: #ffffff !important;
+    }
+
+    .form-signin .shadow {
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .form-signin .rounded {
+        border-radius: 10px;
+    }
+
+</style>

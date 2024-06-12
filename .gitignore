@@ -362,3 +362,4 @@ MigrationBackup/
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
 /Blockchain_Transactions_Diplom/appsettings.json
+/Blockchain_Transactions_Diplom/wwwroot/img/mc_symbol_opt_45_2x.png

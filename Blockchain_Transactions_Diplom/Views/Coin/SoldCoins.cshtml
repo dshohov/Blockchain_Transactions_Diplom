@@ -1,0 +1,175 @@
+﻿@using Blockchain_Transactions_Diplom.ViewModels
+@model SoldCoinsViewModel
+@using Microsoft.AspNetCore.Identity
+@inject SignInManager<AppUser> SignInManager
+@inject UserManager<AppUser> UserManager
+
+@if (SignInManager.IsSignedIn(User))
+{
+    var user = await UserManager.GetUserAsync(User);
+    if(user != null)
+    {
+        <main class="form-sell-container d-flex align-items-center justify-content-center">
+            <form class="form-sell w-50 p-4 bg-light rounded shadow" asp-controller="Coin" asp-action="SoldCoins" method="post" role="form">
+                <h1 class="h3 mb-3 fw-normal text-center">Sell Coins</h1>
+
+                <div class="form-floating mb-3">
+                    <input asp-for="UserId" type="text" value="@user.Id" hidden readonly class="form-control" placeholder="" required>
+                </div>
+
+                <div class="form-floating mb-3 card-input">
+                    <label asp-for="CardNumber" for="floatingCardNumber">Card Number</label>
+                    <div class="card-container">
+                        <div class="card">
+                            <img class="logo" src="~/img/mc_symbol_opt_45_2x.png" />
+                            <input asp-for="CardNumber" type="text" class="form-control card-number" id="floatingCardNumber" placeholder="1234 1234 1234 1234" maxlength="19" required oninput="formatCardNumber(this)">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-floating mb-3">
+                    <input asp-for="CountCoins" type="number" min="0" max="@user.Balance" oninput="checkAmount(this)" class="form-control" id="floatingCountCoins" placeholder="Count Coins" required>
+                    <label asp-for="CountCoins" for="floatingCountCoins">Count Coins</label>
+                </div>
+
+                <div class="invalid-feedback">
+                    Your balance is @user.Balance!!!
+                </div>
+
+                <button class="btn btn-success w-100 py-2" type="submit">Confirm!</button>
+            </form>
+        </main>
+    }
+    
+
+    <script>
+        function checkAmount(input) {
+            var maxAmount = parseFloat(input.getAttribute('max'));
+            var value = parseFloat(input.value);
+
+            if (value > maxAmount) {
+                input.value = maxAmount;
+            }
+
+            if (value < 0) {
+                input.value = 0;
+            }
+        }
+
+        function formatCardNumber(input) {
+            var value = input.value.replace(/\D/g, '').substring(0, 16);
+            var formattedValue = value !== "" ? value.match(/.{1,4}/g).join(' ') : "";
+            input.value = formattedValue;
+        }
+    </script>
+}
+
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        background-color: #f8f9fa;
+    }
+
+    .form-sell-container {
+        min-height: calc(100vh - 200px);
+        padding-top: 60px;
+        padding-bottom: 60px;
+    }
+
+    .form-sell {
+        max-width: 500px;
+        margin: auto;
+    }
+
+    .form-sell .form-floating {
+        margin-bottom: 15px;
+    }
+
+    .form-sell .form-floating input:focus {
+        border-color: #fc81cd;
+        box-shadow: 0 0 0 0.25rem rgba(252, 129, 205, 0.25);
+    }
+
+    .form-sell .form-floating input {
+        border-radius: 0.25rem;
+    }
+
+    .form-sell .btn-success {
+        background-color: #fc81cd;
+        border-color: #fc81cd;
+    }
+
+    .form-sell .btn-success:hover {
+        background-color: #e170b6;
+        border-color: #e170b6;
+    }
+
+    .form-sell .bg-light {
+        background-color: #ffffff !important;
+    }
+
+    .form-sell .shadow {
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .form-sell .rounded {
+        border-radius: 10px;
+    }
+
+    .card-container {
+        position: relative;
+        margin-bottom: 15px;
+    }
+
+    .card {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        height: 230px;
+        width: 100%;
+        border-radius: 10px;
+        background: linear-gradient(135deg, #fc81cd, #764ba2);
+        color: white;
+        padding: 20px;
+    }
+
+    .logo {
+        height: 50px;
+        width: auto;
+        align-self: flex-end;
+    }
+
+    .card-number {
+        font-size: 1.5rem;
+        font-family: "Space Mono", monospace;
+        background: transparent;
+        border: none;
+        width: 100%;
+        color: white;
+        letter-spacing: 2px;
+    }
+
+    .card-number::placeholder {
+        color: #b5b5b5;
+    }
+
+    .form-sell .form-floating label {
+        font-size: 0.875rem;
+        color: #6c757d;
+        padding-left: 10px;
+    }
+
+    input::placeholder {
+        color: #b5b5b5;
+        font-family: "Space Mono", monospace;
+    }
+
+    .form-sell .form-floating input:focus {
+        border-color: #fc81cd;
+        box-shadow: 0 0 0 0.25rem rgba(252, 129, 205, 0.25);
+    }
+
+    .form-sell .form-floating label {
+        color: #6c757d;
+    }
+</style>

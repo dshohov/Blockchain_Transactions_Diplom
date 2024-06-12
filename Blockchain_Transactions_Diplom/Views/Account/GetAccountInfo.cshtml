@@ -1,10 +1,188 @@
 ﻿@using Blockchain_Transactions_Diplom.ViewModels;
-@model AccountInfoViewModel;
+@using Microsoft.AspNetCore.Identity;
+@inject SignInManager<AppUser> SignInManager
+@inject UserManager<AppUser> UserManager
 
-<h1>@Model.FirstName</h1>
+@if (SignInManager.IsSignedIn(User))
+{
+    var user = await UserManager.GetUserAsync(User);
+    if(user != null)
+    {
+        <div class="account-container">
+            <h1 class="account-title">@user.FirstName @user.LastName</h1>
+            <h2 class="account-subtitle">Balance: @user.Balance</h2>
+            <h3 class="account-subtitle">Email: @user.Email</h3>
 
-<h2>@Model.LastName</h2>
+            <div class="account-details">
+                <div class="form-group">
+                    <label for="publicKey" class="form-label">Public Key</label>
+                    <div class="input-group">
+                        <input type="text" id="publicKey" class="form-control text-truncate" style="display: none;" value="@user.Publickey" readonly>
+                        <button class="btn btn-outline-primary" onclick="toggleKey('publicKey')">View</button>
+                        <button class="btn btn-outline-secondary" id="copyPublicKeyBtn" onclick="copyKey('publicKey')">Copy</button>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="privateKey" class="form-label">Private Key</label>
+                    <div class="input-group">
+                        <input type="text" id="privateKey" class="form-control text-truncate" value="@user.PrivateKey" style="display: none;" readonly>
+                        <button class="btn btn-outline-primary" onclick="toggleKey('privateKey')">View</button>
+                        <button class="btn btn-outline-secondary" id="copyPrivateKeyBtn" onclick="copyKey('privateKey')">Copy</button>
+                    </div>
+                </div>
+            </div>
+            <div class="account-actions">
+                @if (!string.IsNullOrEmpty(user.LastOrderId))
+                {
+                    <a asp-action="CheckInvoice" asp-controller="Coin" asp-route-userId="@user.Id" class="btn btn-info">Check my last Invoice!</a>
+                }
+                <a asp-action="BuyCoin" asp-controller="Coin" class="btn btn-success">Buy Coin</a>
+                <a asp-action="SoldCoins" asp-controller="Coin" class="btn btn-warning">Sold Coin</a>
+            </div>
 
-<h3>@Model.Publickey</h3>
+        </div>
+    }
+    
+}
 
-<h4>@Model.PrivateKey</h4>
+<script>
+    function toggleKey(keyId) {
+        var keyElement = document.getElementById(keyId);
+        var copyBtn = document.getElementById('copy' + keyId.charAt(0).toUpperCase() + keyId.slice(1) + 'Btn');
+
+        if (keyElement.style.display === 'none') {
+            keyElement.style.display = 'inline-block';
+        } else {
+            keyElement.style.display = 'none';
+        }
+    }
+
+    function copyKey(keyId) {
+        var keyElement = document.getElementById(keyId);
+        var tempInput = document.createElement('textarea');
+
+        tempInput.value = keyElement.value;
+        document.body.appendChild(tempInput);
+
+        tempInput.select();
+        tempInput.setSelectionRange(0, 99999);
+
+        document.execCommand('copy');
+        document.body.removeChild(tempInput);
+
+        alert(keyId.charAt(0).toUpperCase() + keyId.slice(1) + ' скопирован в буфер обмена.');
+    }
+</script>
+
+<style>
+    .account-container {
+        padding: 20px;
+        margin: 40px auto;
+        max-width: 800px;
+        background: linear-gradient(135deg, #f6f8fc, #ffffff);
+        border-radius: 15px;
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+        text-align: center;
+    }
+
+    .account-title {
+        color: #fc81cd;
+        font-size: 2.5rem;
+        margin-bottom: 20px;
+    }
+
+    .account-subtitle {
+        color: #6c757d;
+        font-size: 1.5rem;
+        margin-bottom: 40px;
+    }
+
+    .account-details {
+        text-align: left;
+    }
+
+    .form-group {
+        margin-bottom: 30px;
+    }
+
+    .form-label {
+        font-weight: 600;
+        margin-bottom: 10px;
+        display: block;
+    }
+
+    .form-control {
+        font-size: 1rem;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        border: 2px solid #fc81cd;
+        border-radius: 5px;
+    }
+
+        .form-control:focus {
+            border-color: #fc81cd;
+            box-shadow: 0 0 0 0.2rem rgba(252, 129, 205, 0.25);
+        }
+
+    .input-group {
+        display: flex;
+        align-items: center;
+    }
+
+    .btn-outline-primary, .btn-outline-secondary {
+        margin-left: 10px;
+        border-color: #fc81cd;
+        color: #fc81cd;
+        transition: background-color 0.3s, color 0.3s, box-shadow 0.3s;
+    }
+
+        .btn-outline-primary:hover, .btn-outline-secondary:hover {
+            background-color: #fc81cd;
+            border-color: #fc81cd;
+            color: white;
+        }
+
+        .btn-outline-primary:focus, .btn-outline-secondary:focus {
+            box-shadow: 0 0 0 0.2rem rgba(252, 129, 205, 0.25);
+            border-color: #fc81cd;
+
+        }
+
+    .btn-info, .btn-success, .btn-warning {
+        margin: 10px;
+        padding: 10px 20px;
+        border-radius: 5px;
+        color: white;
+        text-decoration: none;
+        transition: background-color 0.3s, color 0.3s, box-shadow 0.3s;
+    }
+
+    .btn-info {
+        background-color: #17a2b8;
+    }
+
+    .btn-success {
+        background-color: #28a745;
+    }
+
+    .btn-warning {
+        background-color: #ffc107;
+    }
+
+    .btn-info:hover {
+        background-color: #138496;
+    }
+
+    .btn-success:hover {
+        background-color: #218838;
+    }
+
+    .btn-warning:hover {
+        background-color: #e0a800;
+    }
+
+    .btn-info:focus, .btn-success:focus, .btn-warning:focus {
+        box-shadow: 0 0 0 0.2rem rgba(252, 129, 205, 0.25);
+    }
+</style>

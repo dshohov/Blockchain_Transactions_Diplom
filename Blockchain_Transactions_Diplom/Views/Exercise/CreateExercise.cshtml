@@ -1,0 +1,103 @@
+﻿@using Blockchain_Transactions_Diplom.ViewModels
+@model ExerciseCreateViewModel
+@using Microsoft.AspNetCore.Identity
+@inject SignInManager<AppUser> SignInManager
+@inject UserManager<AppUser> UserManager
+
+<main class="create-exercise-container d-flex align-items-center justify-content-center">
+    @if (SignInManager.IsSignedIn(User))
+    {
+        var user = await UserManager.GetUserAsync(User);
+        <form class="form-create w-50 p-4 bg-light rounded shadow" asp-controller="Exercise" asp-action="CreateExercise" method="post" enctype="multipart/form-data">
+            <h1 class="h3 mb-3 fw-normal text-center">Create a New Exercise</h1>
+
+            <div class="form-floating mb-4">
+                <input asp-for="Name" type="text" class="form-control" id="floatingName" placeholder="Exercise Name" required>
+                <label asp-for="Name" for="floatingName">Exercise Name</label>
+            </div>
+            <div class="form-floating mb-4">
+                <input asp-for="Description" type="text" class="form-control" id="floatingDescription" placeholder="Description" required>
+                <label asp-for="Description" for="floatingDescription">Description</label>
+            </div>
+            <div class="form-group mb-3">
+                <label asp-for="File" class="form-label">Upload File</label>
+                <input asp-for="File" type="file" class="form-control" id="fileInput" >
+            </div>
+
+            <button class="btn btn-success w-100 py-2" type="submit">Confirm!</button>
+        </form>
+    }
+</main>
+
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        background-color: #f8f9fa;
+    }
+
+    .create-exercise-container {
+        min-height: calc(100vh - 200px);
+        padding-top: 60px;
+        padding-bottom: 60px;
+    }
+
+    .form-create {
+        max-width: 600px;
+        margin: auto;
+        background-color: #ffffff;
+        border-radius: 10px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        padding: 20px;
+    }
+
+    .form-floating {
+        position: relative;
+        margin-bottom: 15px;
+    }
+
+    .form-floating input:focus,
+    .form-floating input[type="file"]:focus {
+        border-color: #fc81cd;
+        box-shadow: 0 0 0 0.25rem rgba(252, 129, 205, 0.25);
+    }
+
+    .form-floating input,
+    .form-floating input[type="file"] {
+        border-radius: 0.25rem;
+        padding: 10px;
+    }
+
+    .form-floating label {
+        position: absolute;
+        top: 10px;
+        left: 10px;
+        padding: 0 5px;
+        transition: all 0.2s;
+        color: #999;
+        pointer-events: none;
+        background-color: none;
+    }
+
+    .form-floating input:focus ~ label,
+    .form-floating input:not(:placeholder-shown) ~ label {
+        top: -15px;
+        left: 10px;
+        font-size: 12px;
+        color: #fc81cd;
+    }
+
+    .form-group label {
+        color: #555;
+        margin-bottom: 5px;
+    }
+
+    .btn-success {
+        background-color: #fc81cd;
+        border-color: #fc81cd;
+    }
+
+    .btn-success:hover {
+        background-color: #e170b6;
+        border-color: #e170b6;
+    }
+</style>

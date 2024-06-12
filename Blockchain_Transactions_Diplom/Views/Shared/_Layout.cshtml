@@ -13,52 +13,78 @@
     <link rel="stylesheet" href="~/Blockchain_Transactions_Diplom.styles.css" asp-append-version="true" />
 </head>
 <body>
-    <header class="d-flex flex-wrap align-items-center justify-content-center justify-content-md-between py-3 mb-4 border-bottom">
-        @if (SignInManager.IsSignedIn(User))
-        {
-            <div class="col-md-3 mb-2 mb-md-0">
-                <a class="d-inline-flex link-body-emphasis text-decoration-none nav-link px-2" href="#">Hello @UserManager.GetUserName(User)</a>
-            </div>
-        }
-        else
-        {
-            <div class="col-md-3 mb-2 mb-md-0">
-                <a class="d-inline-flex link-body-emphasis text-decoration-none nav-link px-2" href="#">Hello Student!</a>
-            </div>
-        }
+    <header class="p-3 mb-3 border-bottom">
+       
+            <div class="container">
+                <div class="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start">
+                <a href="/" class="d-flex align-items-center mb-2 mb-lg-0 link-body-emphasis text-decoration-none">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="50" height="44" role="img" fill="#fc81cd" class="bi me-2 bi-egg-fried" viewBox="0 0 16 16">
+                        <path d="M8 11a3 3 0 1 0 0-6 3 3 0 0 0 0 6" />
+                        <path d="M13.997 5.17a5 5 0 0 0-8.101-4.09A5 5 0 0 0 1.28 9.342a5 5 0 0 0 8.336 5.109 3.5 3.5 0 0 0 5.201-4.065 3.001 3.001 0 0 0-.822-5.216zm-1-.034a1 1 0 0 0 .668.977 2.001 2.001 0 0 1 .547 3.478 1 1 0 0 0-.341 1.113 2.5 2.5 0 0 1-3.715 2.905 1 1 0 0 0-1.262.152 4 4 0 0 1-6.67-4.087 1 1 0 0 0-.2-1 4 4 0 0 1 3.693-6.61 1 1 0 0 0 .8-.2 4 4 0 0 1 6.48 3.273z" />
+                    </svg>
+                </a>
 
+                <ul class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
+                    <li><a style="color:#fc81cd; border-color:#fc81cd; margin-left:10px;" class="btn btn-otline nav-link px-2 link-secondary" asp-area="" asp-controller="Coin" asp-action="CreateTransaction">Create Transaction</a></li>
+                    <li><a style="color:#fc81cd; border-color:#fc81cd;margin-left:10px;" class="btn btn-otline  nav-link px-2 link-secondary" asp-area="" asp-controller="SmartContract" asp-action="GetFreesmartContracts">Smart Contracts</a></li>
+                    <li><a style="color:#fc81cd; border-color:#fc81cd;margin-left:10px;"  asp-controller="Home" asp-action="About" class="btn btn-otline nav-link px-2 link-secondary">About</a></li>
+                    <li><a style="color:#fc81cd; border-color:#fc81cd;margin-left:10px;" asp-controller="Home" asp-action="Contact" class="btn btn-otline nav-link px-2 link-body-emphasis">Contacts</a></li>
+                </ul>
+                @if (SignInManager.IsSignedIn(User))
+                {
+                    var user = await UserManager.GetUserAsync(User);
+                    if(user != null)
+                    {
+                        <div class="dropdown text-end" style="display:flex; ">
+                            <a class="dropdown-item textde" style="color: #6c757d;" href="#">Balance: @user.Balance</a>
+                            <a href="#" class="d-block link-body-emphasis text-decoration-none dropdown-toggle" style="color:#fc81cd" data-bs-toggle="dropdown" aria-expanded="false">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="#fc81cd" class="rounded-circle bi bi-person-circle" viewBox="0 0 16 16">
+                                    <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0" />
+                                    <path fill-rule="evenodd" d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8m8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1" />
+                                </svg>
+                            </a>
+                            <ul class="dropdown-menu text-small" style="">
 
-        <ul class="nav nav-pills col-12 col-md-auto mb-2 justify-content-center mb-md-0">
-            <div class="btn-group me-2" role="group" aria-label="First group">
-                <li type="button" class="btn btn-primary "><a class="nav-link px-5 text-white" asp-area="" asp-controller="Home" asp-action="Index" class="nav-link px-2">Home</a></li>
-
-            </div>
-        </ul>
-
-        @if (!SignInManager.IsSignedIn(User))
-        {
-
-            <div class="col-md-3 text-end">
-                <a type="button" asp-action="Register" asp-controller="Account" class="btn btn-outline-primary me-2">Register</a>
-
-                <a asp-action="Login" asp-controller="Account" type="button" class="btn btn-outline-primary me-2">Login</a>
-
-
-            </div>
-        }
-        else
-        {
-            <div class="col-md-3 text-end">
-                <a type="button" asp-action="GetAccountInfo" asp-controller="Account" class="btn btn-outline-primary me-2" >Account</a>
-                <button type="button" class="btn btn-outline-primary me-2" onclick="redirectToLogout()">Logout</button>
-                <script>
-                    function redirectToLogout() {
-                        window.location.href = '/Account/LogOff';
+                                <li><a asp-action="GetAccountInfo" asp-controller="Account" class="dropdown-item">Account Info</a></li>
+                                <li>
+                                    <a class="dropdown-item" asp-route-creatorPublicKey="@user.Publickey" asp-controller="SmartContract" asp-action="MySmartContracts">My Exercise</a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item" asp-route-executorPublicKey="@user.Publickey" asp-controller="SmartContract" asp-action="TasksCompletedByMe">Tasks for me</a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item" asp-action="BuyCoin" asp-controller="Coin">Buy Coin</a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item" asp-action="SoldCoins" asp-controller="Coin">Sold Coin</a>
+                                </li>
+                                <li><hr class="dropdown-divider"></li>
+                                <li>
+                                    <button type="button" class="dropdown-item" onclick="redirectToLogout()">Logout</button>
+                                    <script>
+                                        function redirectToLogout() {
+                                            window.location.href = '/Account/LogOff';
+                                        }
+                                    </script>
+                                </li>
+                            </ul>
+                        </div>
                     }
-                </script>
-            </div>
-        }
+                   
+                }
+                else
+                {
+                    <div class="col-md-3 text-end">
+                        <a type="button" style="color:#fc81cd; border-color:#fc81cd;" asp-action="Register" asp-controller="Account" class="btn btn-outline me-2">Register</a>
 
+                        <a asp-action="Login" style="color:white; background-color:#fc81cd;" asp-controller="Account" type="button" class="btn me-2">Login</a>
+
+
+                    </div>
+                }
+            </div>
+        </div>
+        
     </header>
 
     <div class="container">
@@ -67,10 +93,20 @@
         </main>
     </div>
 
-    <footer class="border-top footer text-muted">
-        <div class="container">
-            &copy; 2024 - Blockchain_Transactions_Diplom - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-        </div>
+    <footer class="d-flex flex-wrap p justify-content-between align-items-center border-top footer text-mute">
+        <p style="color:#fc81cd;" class="col-md-4 mb-0 text-body-secondary">© 2024 Company, Inc</p>
+
+        <a href="/" class="col-md-4 d-flex align-items-center justify-content-center mb-3 mb-md-0 me-md-auto link-body-emphasis text-decoration-none">
+            <svg xmlns="http://www.w3.org/2000/svg"  width="40" height="32" role="img" fill="#fc81cd" class="bi me-2 bi-egg-fried" viewBox="0 0 16 16">
+                <path d="M8 11a3 3 0 1 0 0-6 3 3 0 0 0 0 6" />
+                <path d="M13.997 5.17a5 5 0 0 0-8.101-4.09A5 5 0 0 0 1.28 9.342a5 5 0 0 0 8.336 5.109 3.5 3.5 0 0 0 5.201-4.065 3.001 3.001 0 0 0-.822-5.216zm-1-.034a1 1 0 0 0 .668.977 2.001 2.001 0 0 1 .547 3.478 1 1 0 0 0-.341 1.113 2.5 2.5 0 0 1-3.715 2.905 1 1 0 0 0-1.262.152 4 4 0 0 1-6.67-4.087 1 1 0 0 0-.2-1 4 4 0 0 1 3.693-6.61 1 1 0 0 0 .8-.2 4 4 0 0 1 6.48 3.273z" />
+            </svg>
+        </a>
+
+        <ul class="nav col-md-4 justify-content-end">
+            <li><a style="color:#fc81cd; margin-left:10px;text-decoration:none;" href="#" class="nav-item">About</a></li>
+            <li><a style="color:#fc81cd; margin-left:10px;text-decoration:none;" href="#" class="nav-item">Contacts</a></li>
+        </ul>
     </footer>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>

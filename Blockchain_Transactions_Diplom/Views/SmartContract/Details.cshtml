@@ -1,0 +1,137 @@
+﻿@model SmartContract
+@using Microsoft.AspNetCore.Identity;
+@inject SignInManager<AppUser> SignInManager
+@inject UserManager<AppUser> UserManager
+<div class="container">
+    <div class="row justify-content-center">
+        @if (Model.Exercise != null)
+        {
+            <div class="col-md-8">
+                <h1>@Model.Exercise.Name</h1>
+                <h2>@Model.ContractValue Coins</h2>
+                <h3>@Model.Exercise.Description</h3>
+                @if(Model.Exercise.FileName != null)
+                {
+                    <a asp-action="DownloadFile" asp-controller="Exercise" asp-route-id="@Model.IdExercise" class="btn btn-primary mb-3">Download File</a>
+                }
+
+                @if (SignInManager.IsSignedIn(User))
+                {
+                    var user = await UserManager.GetUserAsync(User);
+                    if (user != null)
+                    {
+                        @if(Model.PublicKeyExecutor == null)
+                        {
+                            <div>
+                                <a asp-action="AcceptSmartContract" asp-controller="SmartContract" asp-route-idSmartContract="@Model.ContractId" asp-route-userPublicKey="@user.Publickey" class="btn btn-primary mb-3">Accept Contract</a>
+                            </div>
+                        }
+                        
+                        if (Model.PublicKeyExecutor == user.Publickey)
+                        {
+                            <div class="answer">
+                                @if (Model.Exercise.AnswerExecutor != null)
+                                {
+                                    <h4>Your Answer:</h4>
+                                    <p>@Model.Exercise.AnswerExecutor</p>
+                                }
+                                @if (Model.Exercise.AnswerCreator != null)
+                                {
+                                    <h4>Creator Answer:</h4>
+                                    <p>@Model.Exercise.AnswerCreator</p>
+                                }
+                               
+                                <a asp-action="ExecutorSendAnsewr" asp-controller="SmartContract" asp-route-idExercise="@Model.IdExercise" class="btn btn-primary">Send Answer</a>
+                            </div>
+                        }
+                        if (Model.PublicKeyCreator == user.Publickey)
+                        {
+                            <div class="answer">
+                                @if(Model.Exercise.AnswerExecutor != null)
+                                {
+                                    <h4>Executor Answer:</h4>
+                                    <p>@Model.Exercise.AnswerExecutor</p>
+                                }
+                                @if (Model.Exercise.AnswerCreator != null)
+                                {
+                                    <h4>Your Answer:</h4>
+                                    <p>@Model.Exercise.AnswerCreator</p>
+                                }
+
+                                @if (Model.Exercise.FileAnswer != null)
+                                {
+                                    <a asp-action="DownloadFileAnswer" asp-controller="Exercise" asp-route-id="@Model.IdExercise" class="btn btn-primary">Get File from Executor</a>
+                                }
+                                @if (Model.Exercise.AnswerExecutor != null)
+                                {
+                                    <a asp-action="SendReplyToExecutor" asp-controller="SmartContract" asp-route-idExercіse="@Model.IdExercise" class="btn btn-primary">Send reply to Executor</a>
+                                    <a asp-action="PayForWork" asp-controller="SmartContract" asp-route-idSmartContract="@Model.ContractId" class="btn btn-primary">Pay for work</a>
+                                }
+                                
+                            </div>
+                        }
+                    }
+                }
+            </div>
+        }
+    </div>
+</div>
+
+
+<style>
+
+
+    .container {
+        background: #fff;
+        padding: 30px;
+        border-radius: 10px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    h1 {
+        color: #fc81cd;
+        font-weight: bold;
+        margin-bottom: 20px;
+    }
+
+    h2 {
+        color: #343a40;
+        margin-bottom: 20px;
+    }
+
+    h3 {
+        color: #6c757d;
+        margin-bottom: 20px;
+    }
+
+    .btn-primary {
+        background-color: #ffd1e5;
+        border-color: #ffd1e5;
+        color: #343a40;
+    }
+
+    .btn-primary:hover {
+        background-color: #ffc1d9;
+        border-color: #ffc1d9;
+    }
+
+    .answer {
+        margin-top: 20px;
+    }
+
+    .answer h4 {
+        color: #fc81cd;
+        font-weight: bold;
+    }
+
+    .answer p {
+        background: #f8f9fa;
+        padding: 10px;
+        border-radius: 5px;
+    }
+
+    .answer a {
+        margin-top: 10px;
+    }
+</style>
+

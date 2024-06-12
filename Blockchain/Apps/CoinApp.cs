@@ -2,14 +2,14 @@
 using System.Security.Cryptography.X509Certificates;
 using System.Text.Json;
 
-record Transaction(string From, string To, long Amount);
+record Transaction(string From, string To, ulong Amount);
 record TransactionBlock(Transaction Data, string Sign) : ISignedBlock<Transaction>
 {
 
     public string PublicKey => Data.From;
 
 }
- class CoinApp
+public class CoinApp
 {
     private readonly IEncryptor _encryptor;
     private readonly TypedBlockchain<TransactionBlock> _blockchain;
@@ -23,27 +23,46 @@ record TransactionBlock(Transaction Data, string Sign) : ISignedBlock<Transactio
             new AmountRule()
             );
     }
-    public long GetBalanceUser(KeyPair user)
+    public ulong GetBalanceUser(KeyPair user)
     {
         return _blockchain.GetBalance(user);
     }
-    public IEnumerable<TypedBlock<TransactionBlock>> GetTransactions(KeyPair keyPair)
+    //public IEnumerable<TypedBlock<TransactionBlock>> GetTransactions(KeyPair keyPair)
+    //{
+    //    return _blockchain.GetTransactions(keyPair);
+    //}
+    private bool AddTransaction(TransactionBlock  block)
     {
-        return _blockchain.GetTransactions(keyPair);
+        if(_blockchain.AddBlock(block))
+            return true;
+        return false;
     }
-    private void AddTransaction(TransactionBlock  block)
+    private bool AddTransactionSuperAdmin(TransactionBlock block)
     {
-        
-        _blockchain.AddBlock(block); 
+        if (_blockchain.AddBlockSuperAdmin(block))
+            return true;
+        return false;
     }
-    public void PerformTransaction(KeyPair from, string toPublicKey, long amount)
+    public bool PerformTransaction(KeyPair from, string toPublicKey, ulong amount)
     {
         var transaction = new Transaction(from.Publickey, toPublicKey, amount);
         var transactionString = JsonSerializer.Serialize(transaction);
         var sign = _encryptor.Sign(from.PrivateKey, transactionString);
         var transactionBlock = new TransactionBlock(transaction,sign);
-        AddTransaction(transactionBlock);
+        if(AddTransaction(transactionBlock))
+            return true;
+        return false;
+    }
+    public bool PerformSuperAdminTransaction(KeyPair from, string toPublicKey, ulong amount)
+    {
+        var transaction = new Transaction(from.Publickey, toPublicKey, amount);
+        var transactionString = JsonSerializer.Serialize(transaction);
+        var sign = _encryptor.Sign(from.PrivateKey, transactionString);
+        var transactionBlock = new TransactionBlock(transaction, sign);
+        if (AddTransactionSuperAdmin(transactionBlock))
+            return true;
+        return false;
     }
 
-   
+
 }

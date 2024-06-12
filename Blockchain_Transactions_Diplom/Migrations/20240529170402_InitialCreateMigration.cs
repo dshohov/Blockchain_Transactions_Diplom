@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Blockchain_Transactions_Diplom.Migrations
 {
     /// <inheritdoc />
-    public partial class Initial_Create : Migration
+    public partial class InitialCreateMigration : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -34,6 +34,9 @@ namespace Blockchain_Transactions_Diplom.Migrations
                     LastName = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Publickey = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     PrivateKey = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Balance = table.Column<decimal>(type: "decimal(20,0)", nullable: true),
+                    LastOrderId = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    LastCoinBuyCount = table.Column<decimal>(type: "decimal(20,0)", nullable: true),
                     UserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     NormalizedUserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     Email = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
@@ -52,6 +55,38 @@ namespace Blockchain_Transactions_Diplom.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_AspNetUsers", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Exercises",
+                columns: table => new
+                {
+                    Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Description = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    FileName = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    File = table.Column<byte[]>(type: "varbinary(max)", nullable: true),
+                    UserId = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Exercises", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "SmartContracts",
+                columns: table => new
+                {
+                    ContractId = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    PublicKeyCreator = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    PublicKeyExecutor = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    IdExercise = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    ContractValue = table.Column<decimal>(type: "decimal(20,0)", nullable: true),
+                    IsConfirmed = table.Column<bool>(type: "bit", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_SmartContracts", x => x.ContractId);
                 });
 
             migrationBuilder.CreateTable(
@@ -217,6 +252,12 @@ namespace Blockchain_Transactions_Diplom.Migrations
 
             migrationBuilder.DropTable(
                 name: "AspNetUserTokens");
+
+            migrationBuilder.DropTable(
+                name: "Exercises");
+
+            migrationBuilder.DropTable(
+                name: "SmartContracts");
 
             migrationBuilder.DropTable(
                 name: "AspNetRoles");

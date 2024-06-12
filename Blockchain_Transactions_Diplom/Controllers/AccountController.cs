@@ -2,8 +2,7 @@
 using Microsoft.AspNetCore.Http.Extensions;
 using Microsoft.AspNetCore.Mvc;
 using Blockchain_Transactions_Diplom.IServices;
-using Blockchain_Transactions_Diplom.Models;
-using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Blockchain_Transactions_Diplom.Controllers
 {
@@ -13,10 +12,6 @@ namespace Blockchain_Transactions_Diplom.Controllers
         public AccountController(IAccountService accountService)
         {
             _accountService = accountService;
-        }
-        public IActionResult Index()
-        {
-            return View();
         }
 
         public IActionResult Login(string? returnUrl = null)
@@ -67,7 +62,7 @@ namespace Blockchain_Transactions_Diplom.Controllers
         {
             if (ModelState.IsValid)
             {
-                var result = await _accountService.PostLogin(loginViewModel);
+                var result = await _accountService.PostLoginAsync(loginViewModel);
                 if (result.Succeeded)
                 {
                     return RedirectToAction("Index", "Home");
@@ -93,7 +88,9 @@ namespace Blockchain_Transactions_Diplom.Controllers
         [HttpGet]
         public async Task<IActionResult> Register(string? returnUrl = null)
         {
+#pragma warning disable CS8604 // Возможно, аргумент-ссылка, допускающий значение NULL.
             var registerViewModel = await _accountService.GetRegisterAsync(returnUrl);
+#pragma warning restore CS8604 // Возможно, аргумент-ссылка, допускающий значение NULL.
             return View(registerViewModel);
         }
         [HttpGet]
@@ -113,7 +110,9 @@ namespace Blockchain_Transactions_Diplom.Controllers
                     return LocalRedirect(returnUrl);
                 ModelState.AddModelError("Password", "User could not be created. Password not unique enough ");
             }
-            return View(await _accountService.FailRegister(registerViewModel));
+#pragma warning disable CS8604 // Возможно, аргумент-ссылка, допускающий значение NULL.
+            return View( _accountService.FailRegisterAsync(registerViewModel));
+#pragma warning restore CS8604 // Возможно, аргумент-ссылка, допускающий значение NULL.
         }
 
         [HttpGet]
@@ -143,10 +142,10 @@ namespace Blockchain_Transactions_Diplom.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetAccountInfo()
+        [Authorize]
+        public IActionResult GetAccountInfo()
         {
-            var userInfo = await _accountService.GetUserInfoAsync(User);
-            return View(userInfo);
+            return View();
         }
 
     }

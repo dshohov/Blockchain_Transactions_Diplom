@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Blockchain_Transactions_Diplom.Migrations
 {
     [DbContext(typeof(ApplicationDBContext))]
-    [Migration("20240503153100_Initial_Create")]
-    partial class Initial_Create
+    [Migration("20240530212012_UpdateModelExercise")]
+    partial class UpdateModelExercise
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -33,6 +33,9 @@ namespace Blockchain_Transactions_Diplom.Migrations
                     b.Property<int>("AccessFailedCount")
                         .HasColumnType("int");
 
+                    b.Property<decimal?>("Balance")
+                        .HasColumnType("decimal(20,0)");
+
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken()
                         .HasColumnType("nvarchar(max)");
@@ -48,8 +51,14 @@ namespace Blockchain_Transactions_Diplom.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<decimal?>("LastCoinBuyCount")
+                        .HasColumnType("decimal(20,0)");
+
                     b.Property<string>("LastName")
                         .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("LastOrderId")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("LockoutEnabled")
@@ -102,6 +111,65 @@ namespace Blockchain_Transactions_Diplom.Migrations
                         .HasFilter("[NormalizedUserName] IS NOT NULL");
 
                     b.ToTable("AspNetUsers", (string)null);
+                });
+
+            modelBuilder.Entity("Blockchain_Transactions_Diplom.Models.Exercise", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("AnswerCreator")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("AnswerExecutor")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<byte[]>("File")
+                        .HasColumnType("varbinary(max)");
+
+                    b.Property<byte[]>("FileAntwort")
+                        .HasColumnType("varbinary(max)");
+
+                    b.Property<string>("FileName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("UserId")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Exercises");
+                });
+
+            modelBuilder.Entity("Blockchain_Transactions_Diplom.Models.SmartContract", b =>
+                {
+                    b.Property<string>("ContractId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<decimal?>("ContractValue")
+                        .HasColumnType("decimal(20,0)");
+
+                    b.Property<string>("IdExercise")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool?>("IsConfirmed")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("PublicKeyCreator")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("PublicKeyExecutor")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("ContractId");
+
+                    b.ToTable("SmartContracts");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
