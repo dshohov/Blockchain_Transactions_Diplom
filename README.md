@@ -1,3 +1,3 @@
-#Blockchain_Transactions_Diplom — Blockchain-Based Freelance Marketplace (Diploma Project for University)
-##Description: Developed a freelance marketplace using blockchain technologies to ensure transaction security and fraud protection. The project involved creating a library for block creation and validation, implementing encryption algorithms, and developing a web interface for interacting with the system. Additionally, a block chain recovery system was implemented for emergency situations.
+# Blockchain_Transactions_Diplom — Blockchain-Based Freelance Marketplace (Diploma Project for University)
+## Description: Developed a freelance marketplace using blockchain technologies to ensure transaction security and fraud protection. The project involved creating a library for block creation and validation, implementing encryption algorithms, and developing a web interface for interacting with the system. Additionally, a block chain recovery system was implemented for emergency situations.
 Technologies: C#, .NET Framework, ASP.NET MVC, Entity Framework, SQL, LINQ, HTML, CSS, JavaScript, Microsoft.AspNetCore.Identity, SHA-256, RSA.
